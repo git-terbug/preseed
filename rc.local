@@ -80,9 +80,18 @@ echo "configurando tomcat" > /home/test/tomcat-ps
 apt-get update | tee -a /home/test/tomcat-ps
 apt-get install -q -y tomcat8 tomcat8-admin tomcat8-user tomcat8-common libtomcat8-java \
 	libtcnative-1 libapache2-mod-apreq2 libapreq2-3 libmysql-java libservlet3.1-java \
-	libapache-pom-java libjasperreports-java libcommons-logging-java libapache2-mod-jk | tee -a /home/test/tomcat-ps  
+	libapache-pom-java libjasperreports-java libcommons-logging-java libapache2-mod-jk \
+	libpostgresql-jdbc-java | tee -a /home/test/tomcat-ps  
 
-ln -s /usr/share/java/mysql-connector-java.jar /usr/share/tomcat8/lib/mysql-connector-java.jar |tee -a /home/test/tomcat-ps
+#copiar el controlador adecuado
+#ln -s /usr/share/java/mysql-connector-java.jar /usr/share/tomcat8/lib/mysql-connector-java.jar |tee -a /home/test/tomcat-ps
+ln -s /usr/share/java/postgresql.jar /usr/share/tomcat8/lib
+ls /usr/share/tomcat8/lib | tee -a /home/test/tomcat-ps
+
+#configurando opciones
+echo 'export CATALINA_OPTS="$CATALINA_OPTS -Xms256m"' > /usr/share/tomcat8/bin/setenv.sh
+echo 'export CATALINA_OPTS="$CATALINA_OPTS -Xmx512m"' >> /usr/share/tomcat8/bin/setenv.sh
+chmod +x /usr/share/tomcat8/bin/setenv.sh
 
 #apt-get install -f | tee -a /home/test/post-install
 
@@ -95,8 +104,10 @@ chmod +x '/home/test/ODK Aggregate v1.4.13 linux-x64-installer.run'
 
 
 echo "finalizar instalación" > /home/test/post-install
+git clone 'https://github.com/git-terbug/scripts.git' /home/test/scripts | tee -a /home/test/aggregate-ps
 apt-get update | tee -a /home/test/post-install
 rm /etc/rc.local | tee -a /home/test/post-install
+
 #debian 8
 #rm /home/test/post.sh | tee -a /home/test/post-install
 #cp /etc/rc.local.old /etc/rc.local | tee -a /home/test/post-install

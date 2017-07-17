@@ -1,5 +1,13 @@
-mysql --user root < '/home/test/ODK Aggregate/create_db_and_user.sql'
+#mysql
+#mysql --user root < '/home/test/ODK Aggregate/create_db_and_user.sql'
+#postgres
+sudo -u postgres psql < '/home/test/ODK Aggregate/create_db_and_user.sql' 
+
 cp '/home/test/ODK Aggregate/ODKAggregate.war' /var/lib/tomcat8/webapps
 wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar'
-systemctl restart mysql
+
+#mysql
+#systemctl restart mysql
+#postgresql
+systemctl restart postresql
 systemctl restart tomcat8

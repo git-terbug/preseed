@@ -1,0 +1,68 @@
+{
+    "app name": "Enketo Smart Paper",
+    "port": "8025",
+    "offline enabled": true,
+    "linked form and data server": {
+        "name": "Kobo",
+        "server url": "",
+        "api key": "enketorules",
+        "legacy formhub": false,
+        "authentication": {
+            "managed by enketo": true,
+            "allow insecure transport": false,
+            "external login url that sets cookie": "http://example.com/login?return={RETURNURL}"
+        }
+    },
+    "timeout": 300000,
+    "encryption key": "s0m3v3rys3cr3tk3y",
+    "less secure encryption key": "this $3cr3t key is crackable",
+    "default theme": "formhub",
+    "themes supported": [],
+    "base path": "",
+    "log": {
+        "submissions": true
+    },
+    "support": {
+        "email": "support@kobotoolbox.org"
+    },
+    "analytics": "google",
+    "google": {
+        "analytics": {
+            "ua": "",
+            "domain": ""
+        },
+        "api key": ""
+    },
+    "piwik": {
+        "analytics": {
+            "tracker url": "",
+            "site id": ""
+        }
+    },
+    "maps": [ {
+        "name": "streets",
+        "tiles": [ "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" ],
+        "attribution": "© <a href=\"http://openstreetmap.org\">OpenStreetMap</a> | <a href=\"www.openstreetmap.org/copyright\">Terms</a>"
+    } ],
+    "query parameter to pass to submission": "",
+    "redis": {
+        "main": {
+            "host": "127.0.0.1",
+            "port": "6379",
+            "password": null
+        },
+        "cache": {
+            "host": "127.0.0.1",
+            "port": "6380",
+            "password": null
+        }
+    },
+    "logo": {
+        "source": "/images/logo.png",
+        "href": ""
+    },
+    "disable save as draft": false,
+    "repeat ordinals": false,
+    "validate continuously": false,
+    "validate page": true
+}
