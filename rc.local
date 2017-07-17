@@ -1,0 +1,107 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+echo "configurando phpmyadmin" > /home/test/phpmyadmin-ps
+
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update | tee -a /home/test/phpmyadmin-ps
+#apt-get dist-upgrade > /home/test/logupdate
+#/usr/share/debconf/fix_db.pl > /home/test/logtest
+
+# Usuario del sistema de configuración basado en web:
+echo "phpmyadmin phpmyadmin/setup-username string config" | debconf-set-selections 
+# Contraseña del sistema de configuración basado en web:
+echo "phpmyadmin phpmyadmin/setup-password password config" | debconf-set-selections 
+# Confirmación de contraseña:
+echo "phpmyadmin phpmyadmin/password-confirm password config" | debconf-set-selections 
+
+# Nombre del usuario de administración de la base de datos:
+#echo "phpmyadmin phpmyadmin/mysql/admin-user string root" | debconf-set-selections 
+echo "phpmyadmin phpmyadmin/mysql/admin-user string admin" | debconf-set-selections 
+# Contraseña del usuario de administración de la base de datos:
+echo "phpmyadmin phpmyadmin/mysql/admin-pass password admin" | debconf-set-selections 
+
+# Contraseña de aplicación MySQL para phpmyadmin:
+echo "phpmyadmin phpmyadmin/mysql/app-pass password qwerty" | debconf-set-selections
+# Confirmación de contraseña:
+echo "phpmyadmin phpmyadmin/app-password-confirm password qwerty" | debconf-set-selections
+
+# ¿Desea configurar la base de datos para phpmyadmin con «dbconfig-common»?
+echo "phpmyadmin	phpmyadmin/dbconfig-install	boolean	true" | debconf-set-selections
+# ¿Desea realizar las actualizaciones de la base de datos de phpmyadmin con «dbconfig-common»?
+echo "phpmyadmin	phpmyadmin/dbconfig-upgrade	boolean	true" | debconf-set-selections
+
+# Servidor web que desea reconfigurar automáticamente:
+# Choices: apache2, lighttpd
+echo "phpmyadmin	phpmyadmin/reconfigure-webserver	multiselect	apache2" | debconf-set-selections
+
+# El tipo de base de datos que se va a utilizar para phpmyadmin:
+# Choices: 
+echo "phpmyadmin	phpmyadmin/database-type	select	mysql" | debconf-set-selections
+# Método de conexión para la base de datos MySQL de phpmyadmin:
+#phpmyadmin	phpmyadmin/mysql/method	select	unix socket
+#phpmyadmin	phpmyadmin/mysql/admin-user	string	root
+# Nombre de usuario MySQL para phpmyadmin:
+echo "phpmyadmin	phpmyadmin/db/app-user	string	phpmyadmin" | debconf-set-selections
+# Nombre de la base de datos MySQL para phpmyadmin:
+echo "phpmyadmin	phpmyadmin/db/dbname	string	phpmyadmin" | debconf-set-selections
+#phpmyadmin	phpmyadmin/reconfigure-webserver	multiselect	apache2
+#phpmyadmin	phpmyadmin/setup-username	string	admin
+
+# ¿Desea realizar una copia de seguridad de la base de datos de phpmyadmin antes de actualizar?
+#phpmyadmin	phpmyadmin/upgrade-backup	boolean	true
+# ¿Desea reinstalar la base de datos para phpmyadmin?
+#phpmyadmin	phpmyadmin/dbconfig-reinstall	boolean	false
+
+#configurando usuario root phmyadmin
+mysql --user=root mysql -Bse "CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;FLUSH PRIVILEGES;"
+
+#apt-get install -q -y phpmyadmin > /home/test/logtest
+apt-get install -q -y phpmyadmin | tee -a /home/test/phpmyadmin-ps
+
+#dpkg-reconfigure phpmyadmin > /home/test/logdpkg
+
+#apt-get -f dist-upgrade > /home/test/logapt
+
+
+echo "configurando tomcat" > /home/test/tomcat-ps
+
+apt-get update | tee -a /home/test/tomcat-ps
+apt-get install -q -y tomcat8 tomcat8-admin tomcat8-user tomcat8-common libtomcat8-java \
+	libtcnative-1 libapache2-mod-apreq2 libapreq2-3 libmysql-java libservlet3.1-java \
+	libapache-pom-java libjasperreports-java libcommons-logging-java libapache2-mod-jk | tee -a /home/test/tomcat-ps  
+
+ln -s /usr/share/java/mysql-connector-java.jar /usr/share/tomcat8/lib/mysql-connector-java.jar |tee -a /home/test/tomcat-ps
+
+#apt-get install -f | tee -a /home/test/post-install
+
+
+echo "configurando Aggregate" > /home/test/aggregate-ps
+
+wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK Aggregate v1.4.13 linux-x64-installer.run' -P /home/test | tee -a /home/test/aggregate-ps
+chown test:test '/home/test/ODK Aggregate v1.4.13 linux-x64-installer.run'
+chmod +x '/home/test/ODK Aggregate v1.4.13 linux-x64-installer.run'
+
+
+echo "finalizar instalación" > /home/test/post-install
+apt-get update | tee -a /home/test/post-install
+rm /etc/rc.local | tee -a /home/test/post-install
+#debian 8
+#rm /home/test/post.sh | tee -a /home/test/post-install
+#cp /etc/rc.local.old /etc/rc.local | tee -a /home/test/post-install
+
+#echo "removido exitoso" > /home/test/rm
+
+
+exit 0
