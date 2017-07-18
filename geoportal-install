@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
 mkdir /usr/local/etc/geoportal
+export GEO=/usr/local/etc/geoportal
 mkdir /usr/local/etc/lucene
 mkdir /usr/local/etc/lucene/assertion
 ls /usr/local/etc > $PS_LOG/geo
@@ -9,15 +10,15 @@ adduser geoportal --gecos "" --disabled-password
 echo "geoportal:password" | sudo chpasswd
 addgroup geoportal sudo
 #su geoportal
-cd /usr/local/etc/geoportal
+cd $GEO
 wget https://github.com/Esri/geoportal-server/releases/download/v1.2.8/geoportal-1.2.8.zip
 unzip geoportal-1.2.8.zip
 ls -l >> $PS_LOG/geo
 
-cd '/usr/local/etc/geoportal/Database Scripts'
-chown -R postgres:postgres '/usr/local/etc/geoportal/Database Scripts/PostgreSQL'
-chmod -R +x '/usr/local/etc/geoportal/Database Scripts/PostgreSQL'
-cd '/usr/local/etc/geoportal/Database Scripts/PostgreSQL'
+cd $GEO'/Database Scripts'
+chown -R postgres:postgres $GEO'/Database Scripts/PostgreSQL'
+chmod -R +x $GEO'/Database Scripts/PostgreSQL'
+cd $GEO'/Database Scripts/PostgreSQL'
 ls -l >> $PS_LOG/geo
 
 dos2unix grants_linuxpg.sh
@@ -32,12 +33,12 @@ sudo su postgres create_schema_linuxpg.sh localhost 5432 postgres geoportal
 sudo -u postgres psql -c "\dn" >> $PS_LOG/geo
 sudo -u postgres psql -c "\dtvs geoportal.*" >> $PS_LOG/geo
 
-cp '/usr/local/etc/geoportal/Web Applications/Geoportal/geoportal.war' /var/lib/tomcat8/webapps
+cp $GEO'/Web Applications/Geoportal/geoportal.war' $TOMCAT_APPS
 systemctl restart postgresql
 systemctl restart tomcat8
-mv /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml.old
-cp ~/scripts/gpt.xml /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml
-chown tomcat8:tomcat8 /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+mv $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml.old
+cp ~/scripts/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
 
 cp ~/scripts/geoportal.xml /etc/tomcat8/Catalina/localhost/geoportal.xml
 chown root:tomcat8 /etc/tomcat8/Catalina/localhost/geoportal.xml

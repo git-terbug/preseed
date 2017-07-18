@@ -111,6 +111,7 @@ echo "finalizar instalación" > $PS_LOG/post-install
 git clone 'https://github.com/git-terbug/scripts.git' $DEF_PATH/scripts | tee -a $PS_LOG/aggregate-ps
 apt-get update | tee -a $PS_LOG/post-install
 rm /etc/rc.local | tee -a $PS_LOG/post-install
+chown -R $DEF_USER:$DEF_USER $PS_LOG
 
 #debian 8
 #rm $PS_LOG/post.sh | tee -a $PS_LOG/post-install
