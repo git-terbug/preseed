@@ -70,7 +70,7 @@ echo "phpmyadmin phpmyadmin/app-password-confirm password qwerty" | debconf-set-
 
 # gpt.xml
 
-538:  <account username="gptuser" password="gptuser" encrypted="false"/>
+538: <account username="gptuser" password="gptuser" encrypted="false"/>
 
 # geoportal.xml
            
