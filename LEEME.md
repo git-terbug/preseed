@@ -64,4 +64,13 @@ echo "phpmyadmin phpmyadmin/app-password-confirm password qwerty" | debconf-set-
 
 # enketo
 
+# geoportal-install
 
+7: echo "geoportal:password" | sudo chpasswd
+
+# gpt.xml
+
+538:  <account username="gptuser" password="gptuser" encrypted="false"/>
+
+# geoportal.xml
+           
