@@ -6,7 +6,7 @@
 sudo -u postgres psql < ~/ODK\ Aggregate/create_db_and_user.sql
 
 cp ~/ODK\ Aggregate/ODKAggregate.war $TOMCAT_APPS
-wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar' -P ~
+sudo -u $DEF_USER wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar' -P ~
 
 #mysql
 #systemctl restart mysql

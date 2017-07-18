@@ -3,10 +3,11 @@ export DEF_USER=test
 export PS_LOG=~/pslog
 export TOMCAT_APPS=/var/lib/tomcat8/webapps
 #ejecutar sh full-install
+
 echo 'Instalando ODK Aggregate'
-sudo -E sh aggregate-install
+sudo -E sh ~/scripts/aggregate-install
 echo 'Instalando Enketo'
-sudo -E sh enketo-install
+sudo -E sh ~/scripts/enketo-install
 echo 'Instalando Geoportal'
-sudo -E sh geoportal-install
+sudo -E sh ~/scripts/geoportal-install
 
