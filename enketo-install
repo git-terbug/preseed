@@ -1,5 +1,5 @@
 #!/bin/sh -e
-export DEF_USER=test
+
 #enketo
 #ntpdate
 #sudo apt-get install -y software-properties-common dirmngr 
@@ -20,8 +20,8 @@ sudo npm install -g grunt-cli pm2
 
 dpkg-reconfigure -plow -f noninteractive unattended-upgrades
 #debconf unattended-upgrades
-echo	unattended-upgrades	unattended-upgrades/origins_pattern	string	"origin=Debian,codename=${distro_codename},label=Debian-Security" | sudo debconf-set-selections
-echo	unattended-upgrades	unattended-upgrades/enable_auto_updates	boolean	true | sudo debconf-set-selections
+echo	unattended-upgrades	unattended-upgrades/origins_pattern	string	"origin=Debian,codename=${distro_codename},label=Debian-Security" | debconf-set-selections
+echo	unattended-upgrades	unattended-upgrades/enable_auto_updates	boolean	true | debconf-set-selections
 
 cd ~
 git clone https://github.com/enketo/enketo-express.git
