@@ -2,4 +2,10 @@ echo 'Hola mundo'
 echo $HOME
 echo $USER
 mkdir /usr/local/etc/qwety
-ls -l ~/hola
+#ls -l ~/hola
+mv $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml.old
+cp ~/scripts/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+
+cp ~/scripts/geoportal.xml /etc/tomcat8/Catalina/localhost/geoportal.xml
+chown root:tomcat8 /etc/tomcat8/Catalina/localhost/geoportal.xml

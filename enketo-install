@@ -16,7 +16,7 @@ apt-get install -y git nginx-extras htop build-essential redis-server checkinsta
 curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
 apt-get install -y nodejs
 #grunt-jsbeautifier grunt-concurrent grunt-contrib-jshint grunt-contrib-watch grunt-karma grunt-mocha-test grunt-nodemon
-sudo npm install -g grunt-cli pm2
+npm install -g grunt-cli pm2
 
 dpkg-reconfigure -plow -f noninteractive unattended-upgrades
 #debconf unattended-upgrades
@@ -24,9 +24,9 @@ echo	unattended-upgrades	unattended-upgrades/origins_pattern	string	"origin=Debi
 echo	unattended-upgrades	unattended-upgrades/enable_auto_updates	boolean	true | debconf-set-selections
 
 cd ~
-git clone https://github.com/enketo/enketo-express.git
+sudo -u $DEF_USER git clone https://github.com/enketo/enketo-express.git
 cd enketo-express
-npm install --production
+sudo -u $DEF_USER npm install --production
 
 systemctl stop redis
 
@@ -47,14 +47,14 @@ systemctl enable redis@redis-enketo-cache
 #configurar
 cp ~/scripts/config.json ~/enketo-express/config/config.json
 
-grunt
+sudo -u $DEF_USER grunt
 
 #npm start
 
-pm2 start app.js -n enketo
-pm2 save
+sudo -u $DEF_USER pm2 start app.js -n enketo
+sudo -u $DEF_USER pm2 save
 #-u test/enketo
-sudo pm2 startup -u $DEF_USER --hp ~
+pm2 startup -u $DEF_USER --hp ~
 
 #crear webserver conf
 #cat /etc/nginx/sites-available/enketo

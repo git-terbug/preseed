@@ -27,7 +27,7 @@ dos2unix create_schema_linuxpg.sh
 dos2unix schema_pg.sql
 
 #agregar contraseña postgres
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'password';" >> $PS_LOG/geo
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'hola';" >> $PS_LOG/geo
 sudo su postgres grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportal 
 sudo su postgres create_schema_linuxpg.sh localhost 5432 postgres geoportal
 sudo -u postgres psql -c "\dn" >> $PS_LOG/geo
