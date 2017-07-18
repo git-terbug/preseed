@@ -1,4 +1,7 @@
 #!/bin/sh -e
+export DEF_USER=test
+export PS_LOG=~/pslog
+export TOMCAT_APPS=/var/lib/tomcat8/webapps
 #ejecutar sh export
 sudo -E sh aggregate-install
 sudo -E sh enketo-install
