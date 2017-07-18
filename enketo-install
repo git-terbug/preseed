@@ -1,7 +1,7 @@
 #enketo
 #ntpdate
 #sudo apt-get install -y software-properties-common dirmngr 
-sudo add-apt-repository -y ppa:chris-lea/redis-server
+#sudo add-apt-repository -y ppa:chris-lea/redis-server
 sudo apt-get update
 sudo apt-get upgrade -y
 
@@ -18,7 +18,7 @@ sudo npm install -g grunt-cli pm2
 
 sudo dpkg-reconfigure -plow -f noninteractive unattended-upgrades
 #debconf unattended-upgrades
-echo	unattended-upgrades	unattended-upgrades/origins_pattern	string	"origin=Debian,codename=${distro_codename},label=Debian-Security"; | sudo debconf-set-selections
+echo	unattended-upgrades	unattended-upgrades/origins_pattern	string	"origin=Debian,codename=${distro_codename},label=Debian-Security" | sudo debconf-set-selections
 echo	unattended-upgrades	unattended-upgrades/enable_auto_updates	boolean	true | sudo debconf-set-selections
 
 cd ~
@@ -43,20 +43,20 @@ sudo systemctl enable redis@redis-enketo-cache
 
 #cp ~/enketo-express/config/default-config.json ~/enketo-express/config/config.json
 #configurar
-cp /home/test/scripts/config.json ~/enketo-express/config/config.json
+cp $DEF_PATH/scripts/config.json ~/enketo-express/config/config.json
 
 grunt
 
-npm start
+#npm start
 
 pm2 start app.js -n enketo
 pm2 save
 #-u test/enketo
-sudo pm2 startup -u test --hp /home/test
+sudo pm2 startup -u $DEF_USER --hp $DEF_PATH
 
 #crear webserver conf
 #cat /etc/nginx/sites-available/enketo
-sudo cp /home/test/scripts/enketo /etc/nginx/sites-available/enketo
+sudo cp $DEF_PATH/scripts/enketo /etc/nginx/sites-available/enketo
 #activar
 sudo rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/enketo /etc/nginx/sites-enabled/enketo 
