@@ -1,0 +1,5 @@
+#!/bin/sh -e
+#ejecutar sh export
+sudo -E sh aggregate-install
+sudo -E sh enketo-install
+sudo -E sh geoportal-install

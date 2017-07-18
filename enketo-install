@@ -1,22 +1,24 @@
+#!/bin/sh -e
+export DEF_USER=test
 #enketo
 #ntpdate
 #sudo apt-get install -y software-properties-common dirmngr 
 #sudo add-apt-repository -y ppa:chris-lea/redis-server
-sudo apt-get update
-sudo apt-get upgrade -y
+apt-get update
+apt-get upgrade -y
 
 #detener apache2 primero
-sudo systemctl disable apache2
-sudo systemctl stop apache2
+systemctl disable apache2
+systemctl stop apache2
 
-sudo apt-get install -y git nginx-extras htop build-essential redis-server checkinstall python
+apt-get install -y git nginx-extras htop build-essential redis-server checkinstall python
 
 curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
-sudo apt-get install -y nodejs
+apt-get install -y nodejs
 #grunt-jsbeautifier grunt-concurrent grunt-contrib-jshint grunt-contrib-watch grunt-karma grunt-mocha-test grunt-nodemon
 sudo npm install -g grunt-cli pm2
 
-sudo dpkg-reconfigure -plow -f noninteractive unattended-upgrades
+dpkg-reconfigure -plow -f noninteractive unattended-upgrades
 #debconf unattended-upgrades
 echo	unattended-upgrades	unattended-upgrades/origins_pattern	string	"origin=Debian,codename=${distro_codename},label=Debian-Security" | sudo debconf-set-selections
 echo	unattended-upgrades	unattended-upgrades/enable_auto_updates	boolean	true | sudo debconf-set-selections
@@ -26,24 +28,24 @@ git clone https://github.com/enketo/enketo-express.git
 cd enketo-express
 npm install --production
 
-sudo systemctl stop redis
+systemctl stop redis
 
-sudo mv /etc/redis/redis.conf /etc/redis/redis-origin.conf
-sudo cp ~/enketo-express/setup/redis/conf/redis-enketo-main.conf /etc/redis/
-sudo cp ~/enketo-express/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
+mv /etc/redis/redis.conf /etc/redis/redis-origin.conf
+cp ~/enketo-express/setup/redis/conf/redis-enketo-main.conf /etc/redis/
+cp ~/enketo-express/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
 
-sudo cp ~/enketo-express/setup/redis/systemd/system/* /etc/systemd/system/
+cp ~/enketo-express/setup/redis/systemd/system/* /etc/systemd/system/
 
-sudo systemctl disable redis
-sudo systemctl daemon-reload
-sudo systemctl start redis@redis-enketo-main
-sudo systemctl enable redis@redis-enketo-main
-sudo systemctl start redis@redis-enketo-cache
-sudo systemctl enable redis@redis-enketo-cache
+systemctl disable redis
+systemctl daemon-reload
+systemctl start redis@redis-enketo-main
+systemctl enable redis@redis-enketo-main
+systemctl start redis@redis-enketo-cache
+systemctl enable redis@redis-enketo-cache
 
 #cp ~/enketo-express/config/default-config.json ~/enketo-express/config/config.json
 #configurar
-cp $DEF_PATH/scripts/config.json ~/enketo-express/config/config.json
+cp ~/scripts/config.json ~/enketo-express/config/config.json
 
 grunt
 
@@ -52,15 +54,15 @@ grunt
 pm2 start app.js -n enketo
 pm2 save
 #-u test/enketo
-sudo pm2 startup -u $DEF_USER --hp $DEF_PATH
+sudo pm2 startup -u $DEF_USER --hp ~
 
 #crear webserver conf
 #cat /etc/nginx/sites-available/enketo
-sudo cp $DEF_PATH/scripts/enketo /etc/nginx/sites-available/enketo
+cp ~/scripts/enketo /etc/nginx/sites-available/enketo
 #activar
-sudo rm /etc/nginx/sites-enabled/default
-sudo ln -s /etc/nginx/sites-available/enketo /etc/nginx/sites-enabled/enketo 
-sudo service nginx restart
+rm /etc/nginx/sites-enabled/default
+ln -s /etc/nginx/sites-available/enketo /etc/nginx/sites-enabled/enketo 
+service nginx restart
 
 #reiniciar después de modificar conf.json -> grunt -> pm2 restart enketo
 

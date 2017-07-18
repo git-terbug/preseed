@@ -1,0 +1,5 @@
+echo 'Hola mundo'
+echo $HOME
+echo $USER
+mkdir /usr/local/etc/qwety
+ls -l ~/hola

@@ -1,10 +1,12 @@
-#mysql
-#mysql --user root < $DEF_PATH/ODK\ Aggregate/create_db_and_user.sql
-#postgres
-sudo -u postgres psql < $DEF_PATH/ODK\ Aggregate/create_db_and_user.sql
+#!/bin/sh -e
 
-cp $DEF_PATH/ODK\ Aggregate/ODKAggregate.war /var/lib/tomcat8/webapps
-wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar' -P $DEF_PATH
+#mysql
+#mysql --user root < ~/ODK\ Aggregate/create_db_and_user.sql
+#postgres
+sudo -u postgres psql < ~/ODK\ Aggregate/create_db_and_user.sql
+
+cp ~/ODK\ Aggregate/ODKAggregate.war /var/lib/tomcat8/webapps
+wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar' -P ~
 
 #mysql
 #systemctl restart mysql
