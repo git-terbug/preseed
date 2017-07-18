@@ -1,22 +1,22 @@
 sudo mkdir /usr/local/etc/geoportal
 sudo mkdir /usr/local/etc/lucene
 sudo mkdir /usr/local/etc/lucene/assertion
-ls /usr/local/etc > /home/test/geo
+ls /usr/local/etc > $PS_LOG/geo
 
 sudo adduser geoportal --gecos "" --disabled-password
 echo "geoportal:password" | sudo chpasswd
 sudo addgroup geoportal sudo
-su geoportal
+#su geoportal
 cd /usr/local/etc/geoportal
-sudo wget http://esri.github.io/geoportal-server/distribution/1.2.8/geoportal-1.2.8.zip
+sudo wget https://github.com/Esri/geoportal-server/releases/download/v1.2.8/geoportal-1.2.8.zip
 sudo unzip geoportal-1.2.8.zip
-ls -l >> /home/test/geo
+ls -l >> $PS_LOG/geo
 
 cd '/usr/local/etc/geoportal/Database Scripts'
 sudo chown -R postgres:postgres '/usr/local/etc/geoportal/Database Scripts/PostgreSQL'
 sudo chmod -R +x '/usr/local/etc/geoportal/Database Scripts/PostgreSQL'
 cd '/usr/local/etc/geoportal/Database Scripts/PostgreSQL'
-ls -l >> /home/test/geo
+ls -l >> $PS_LOG/geo
 
 dos2unix grants_linuxpg.sh
 dos2unix grants_pg.sql
@@ -24,17 +24,19 @@ dos2unix create_schema_linuxpg.sh
 dos2unix schema_pg.sql
 
 #agregar contraseña postgres
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'password';" >> /home/test/geo
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'password';" >> $PS_LOG/geo
 sudo su postgres grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportal 
 sudo su postgres create_schema_linuxpg.sh localhost 5432 postgres geoportal
-sudo -u postgres psql -c "\dn" >> /home/test/geo
-sudo -u postgres psql -c "\dtvs geoportal.*" >> /home/test/geo
+sudo -u postgres psql -c "\dn" >> $PS_LOG/geo
+sudo -u postgres psql -c "\dtvs geoportal.*" >> $PS_LOG/geo
 
 sudo cp '/usr/local/etc/geoportal/Web Applications/Geoportal/geoportal.war' /var/lib/tomcat8/webapps
 sudo systemctl restart postgresql
 sudo systemctl restart tomcat8
 sudo mv /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml.old
-sudo cp /home/test/scripts/gpt.xml /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+sudo cp $DEF_PATH/scripts/gpt.xml /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+sudo chown tomcat8:tomcat8 /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml
 
-sudo cp /home/test/scripts/geoportal.xml /etc/tomcat8/Catalina/localhost/geoportal.xml
-sudo chmod +wx geoportal.xml
+sudo cp $DEF_PATH/scripts/geoportal.xml /etc/tomcat8/Catalina/localhost/geoportal.xml
+sudo chown root:tomcat8 /etc/tomcat8/Catalina/localhost/geoportal.xml
+#sudo chmod +wx geoportal.xml
