@@ -1,4 +1,8 @@
 #!/bin/sh -e
+#
+#Instala geoportal
+
+echo "$(tput bold)Instalando Geoportal$(tput sgr0)"
 
 mkdir /usr/local/etc/geoportal
 export GEO=/usr/local/etc/geoportal
@@ -27,11 +31,11 @@ dos2unix create_schema_linuxpg.sh
 dos2unix schema_pg.sql
 
 #agregar contraseña postgres
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'hola';" >> $PS_LOG/geo
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'hola';" #>> $PS_LOG/geo
 sudo su postgres grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportal 
 sudo su postgres create_schema_linuxpg.sh localhost 5432 postgres geoportal
-sudo -u postgres psql -c "\dn" >> $PS_LOG/geo
-sudo -u postgres psql -c "\dtvs geoportal.*" >> $PS_LOG/geo
+sudo -u postgres psql -c "\dn" #>> $PS_LOG/geo
+sudo -u postgres psql -c "\dtvs geoportal.*" #>> $PS_LOG/geo
 
 cp $GEO'/Web Applications/Geoportal/geoportal.war' $TOMCAT_APPS
 systemctl restart postgresql

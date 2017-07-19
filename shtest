@@ -14,5 +14,3 @@ ls
 sudo -E -u $USER sh ~/scripts/hola
 sudo -u $USER sh ~/scripts/hola
 sudo -E sh ~/scripts/hola
-
-

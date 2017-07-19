@@ -1,7 +1,10 @@
 #!/bin/sh -e
+#
+#Instala Enketo
+
 #export DEF_USER=test
-#enketo
-#ntpdate
+echo "$(tput bold)Instalando Enketo$(tput sgr0)"
+
 #sudo apt-get install -y software-properties-common dirmngr 
 #sudo add-apt-repository -y ppa:chris-lea/redis-server
 apt-get update

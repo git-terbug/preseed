@@ -1,5 +1,8 @@
 #!/bin/sh -e
+#
+#Instala ODK Aggregate después de ejecutar el asistente
 
+echo "$(tput bold)Instalando ODK Aggregate$(tput sgr0)"
 #mysql
 #mysql --user root < ~/ODK\ Aggregate/create_db_and_user.sql
 #postgres

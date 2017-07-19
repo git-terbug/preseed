@@ -2,7 +2,24 @@ echo 'Hola mundo'
 echo $HOME
 echo $USER
 mkdir /usr/local/etc/qwety
-#ls -l ~/hola
+ls -l ~/scripts
+
+export DEF_USER=$USER
+export PS_LOG=~/pslog
+export TOMCAT_APPS=/var/lib/tomcat8/webapps
+
+echo "$DEF_USER bye"
+exit
+mkdir /usr/local/etc/geoportal
+export GEO=/usr/local/etc/geoportal
+cd $GEO'/Database Scripts/PostgreSQL'
+#agregar contraseña postgres
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'hola';" >> $PS_LOG/geo
+sudo su postgres grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportal 
+sudo su postgres create_schema_linuxpg.sh localhost 5432 postgres geoportal
+sudo -u postgres psql -c "\dn" >> $PS_LOG/geo
+sudo -u postgres psql -c "\dtvs geoportal.*" >> $PS_LOG/geo
+
 mv $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml.old
 cp ~/scripts/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
 chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml

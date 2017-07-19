@@ -1,13 +1,26 @@
 #!/bin/sh -e
-export DEF_USER=test
-export PS_LOG=~/pslog
-export TOMCAT_APPS=/var/lib/tomcat8/webapps
+#
+#Instala los componentes necesarios del servidor
 #ejecutar sh full-install
 
-echo 'Instalando ODK Aggregate'
-sudo -E sh ~/scripts/aggregate-install
-echo 'Instalando Enketo'
-sudo -E sh ~/scripts/enketo-install
-echo 'Instalando Geoportal'
-sudo -E sh ~/scripts/geoportal-install
+export DEF_USER=$USER
+export PS_LOG=~/pslog
+export TOMCAT_APPS=/var/lib/tomcat8/webapps
+
+#echo "\033[1mInstalando componentes\033[0m" #usando ANSI
+echo "$(tput bold)Instalando componentes$(tput sgr0)"
+#echo 'Instalando ODK Aggregate'
+#sudo -E sh ~/scripts/aggregate-install
+#echo 'Instalando Enketo'
+#sudo -E sh ~/scripts/enketo-install
+#echo 'Instalando Geoportal'
+#sudo -E sh ~/scripts/geoportal-install
+
+#ejecutar sudo -E sh serv-setup
+#asignar usuario manualmente
+export DEF_USER=test
+#export DEF_PATH=/home/$DEF_USER
+sh ~/scripts/aggregate-install && sh ~/scripts/enketo-install && sh ~/scripts/geoportal-install
+exit 0
+#sh hola && sudo -E sh hola && sh echo $HOME && sh false && sh echo bye
 
