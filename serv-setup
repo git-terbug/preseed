@@ -18,9 +18,8 @@ echo "$(tput bold)Instalando componentes$(tput sgr0)"
 
 #ejecutar sudo -E sh serv-setup
 #asignar usuario manualmente
-export DEF_USER=test
+export DEF_USER=$1
 #export DEF_PATH=/home/$DEF_USER
 sh ~/scripts/aggregate-install && sh ~/scripts/enketo-install && sh ~/scripts/geoportal-install
-exit 0
 #sh hola && sudo -E sh hola && sh echo $HOME && sh false && sh echo bye
-
+exit 0
