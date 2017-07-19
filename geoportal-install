@@ -42,10 +42,10 @@ systemctl restart postgresql
 systemctl restart tomcat8
 mv $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml.old
 cp ~/scripts/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
-chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+#chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
 ls -l $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config >> $PS_LOG/geo
 
 cp ~/scripts/geoportal.xml /etc/tomcat8/Catalina/localhost/geoportal.xml
-chown root:tomcat8 /etc/tomcat8/Catalina/localhost/geoportal.xml
-#sudo chmod +wx geoportal.xml
+#chown root:tomcat8 /etc/tomcat8/Catalina/localhost/geoportal.xml
+sudo chmod +wx /etc/tomcat8/Catalina/localhost/geoportal.xml
 ls -l /etc/tomcat8/Catalina/localhost >> $PS_LOG/geo 
