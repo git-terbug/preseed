@@ -1,7 +1,7 @@
 #!/bin/sh -e
 #
 #Instala los componentes necesarios del servidor
-#ejecutar sh full-install
+#ejecutar sh serv-setup
 
 export DEF_USER=$USER
 export PS_LOG=~/pslog
