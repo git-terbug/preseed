@@ -1,18 +1,24 @@
-#!/bin/sh -e
+#!/bin/bash -e 
 #
 #Instala ODK Aggregate después de ejecutar el asistente
 
 echo "$(tput bold)Instalando ODK Aggregate$(tput sgr0)"
+#verificar la conexión
+sudo -u $DEF_USER wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar' -P ~
+
+echo 'creando base de datos' >> $PS_LOG/aggregate-ps
 #mysql
 #mysql --user root < ~/ODK\ Aggregate/create_db_and_user.sql
 #postgres
-sudo -u postgres psql < ~/ODK\ Aggregate/create_db_and_user.sql
+sudo -u postgres psql < ~/ODK\ Aggregate/create_db_and_user.sql 
 
 cp ~/ODK\ Aggregate/ODKAggregate.war $TOMCAT_APPS
-sudo -u $DEF_USER wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar' -P ~
-
+#sudo -u $DEF_USER wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar' -P ~
+ 
+echo -e '\nReiniciando procesos' >> $PS_LOG/aggregate-ps
 #mysql
 #systemctl restart mysql
 #postgresql
-systemctl restart postgresql
-systemctl restart tomcat8
+(systemctl restart postgresql && echo 'reinicio exitoso Postgresql' || echo 'falló el reinicio Postgresql') >> $PS_LOG/aggregate-ps
+(systemctl restart tomcat8 && echo 'reinicio exitoso Tomcat' || echo 'falló el reinicio Tomcat') >> $PS_LOG/aggregate-ps
+exit

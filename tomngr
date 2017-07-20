@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+MG_TUSER=$1
+MG_PASS=$2
+AG_TUSER=$3
+AG_PASS=$4
+
+echo "$(tput bold)Configurando Tomcat-gui$(tput sgr0)"
+
+if [ -z $MG_TUSER ]; then
+read -p "Introduzca usuario (manager-gui): " MG_TUSER
+fi
+if [ -z $MG_PASS ]; then
+read -p "Introduzca contraseña (manager-gui): " MG_PASS
+fi
+if [ -z $AG_TUSER ]; then
+read -p "Introduzca usuario (admin-gui): " AG_TUSER
+fi
+if [ -z $AG_PASS ]; then
+read -p "Introduzca contraseña (admin-gui): " AG_PASS
+fi
+
+(sed -i.old '$ i #Manager-gui\n	<role rolename="manager-gui"/> \
+	<user username="'"$MG_TUSER"'" password="'"$MG_PASS"'" roles="manager-gui"/> \
+#Host-manager\n	<role rolename="admin-gui"/> \
+	<user username="'"$AG_TUSER"'" password="'"$AG_PASS"'" roles="admin-gui"/>' /etc/tomcat8/tomcat-users.xml && \
+	echo "Se han agregado los usuarios $MG_TUSER y $AG_TUSER a /etc/tomcat8/tomcat-users.xml" || \
+	echo 'ha ocurrido un error') > $PS_LOG/tomngr-conf 
+exit

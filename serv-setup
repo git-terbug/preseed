@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 #
 #Instala los componentes necesarios del servidor
 #ejecutar sh serv-setup
@@ -7,7 +7,7 @@ export DEF_USER=$USER
 export PS_LOG=~/pslog
 export TOMCAT_APPS=/var/lib/tomcat8/webapps
 
-#echo "\033[1mInstalando componentes\033[0m" #usando ANSI
+#echo "\033[1mInstalando componentes\033[0m" #negritas ANSI
 echo "$(tput bold)Instalando componentes$(tput sgr0)"
 #echo 'Instalando ODK Aggregate'
 #sudo -E sh ~/scripts/aggregate-install
@@ -20,6 +20,10 @@ echo "$(tput bold)Instalando componentes$(tput sgr0)"
 #asignar usuario manualmente
 export DEF_USER=$1
 #export DEF_PATH=/home/$DEF_USER
-sh ~/scripts/aggregate-install && sh ~/scripts/enketo-install && sh ~/scripts/geoportal-install
+cd ~/scripts
+#sh ~/scripts/aggregate-install && sh ~/scripts/enketo-install && sh ~/scripts/geoportal-install
+#ejecutables
+./tomngr && ./aggregate-install && ./enketo-install && ./geoportal-install
 #sh hola && sudo -E sh hola && sh echo $HOME && sh false && sh echo bye
+
 exit 0
