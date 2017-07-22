@@ -1,0 +1,33 @@
+#!/bin/bash -e
+#
+#configurar proxy
+
+#configurando nginx
+echo "$(tput bold)Configurando nginx$(tput sgr0)"
+
+#cp ~/scripts/tomcat-proxy.conf /etc/nginx/sites-available/tomcat-proxy.conf && \
+#rm /etc/nginx/sites-enabled/default && \
+#ln -s /etc/nginx/sites-available/tomcat-proxy.conf /etc/nginx/sites-enabled/tomcat-proxy.conf 
+
+(nginx -t && nginx -s reload && \
+echo 'nginx configurado' || echo 'error al configurar nginx') >> $PS_LOG/enketo-install
+
+#configurando tomcat
+echo "$(tput bold)Configurando tomcat$(tput sgr0)"
+
+#(sed -i.orig '/\/Engine/ i \ \
+#	<!-- Redireccionar proxy --> \
+#	<Valve className="org.apache.catalina.valves.RemoteIpValve" \
+#		internalProxies="127\\.0\\.[0-1]\\.1" \
+#		remoteIpHeader="x-forwarded-for" \
+#		requestAttributesEnabled="true" \
+#		protocolHeader="x-forwarded-proto" \
+#		protocolHeaderHttpsValue="https"/>' /etc/tomcat8/server.xml && \
+#echo "Se ha actualizado el archivo /etc/tomcat8/server.xml" || \
+#echo 'ha ocurrido un error') >> $PS_LOG/enketo-install
+
+exit
+
+
+
+

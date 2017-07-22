@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 #
 #Instala Enketo
 
@@ -11,15 +11,15 @@ apt-get update
 apt-get upgrade -y
 
 #detener apache2 primero
-systemctl disable apache2
-systemctl stop apache2
+(systemctl disable apache2 && systemctl stop apache2 && \
+echo 'Se ha detenido el servidor Apache' || echo 'No se ha podido detener Apache') > $PS_LOG/enketo-install
 
-apt-get install -y git nginx-extras htop build-essential redis-server checkinstall python
+apt-get install -y git nginx-extras htop build-essential redis-server checkinstall python | tee -a $PS_LOG/enketo-install
 
 curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
 apt-get install -y nodejs
 #grunt-jsbeautifier grunt-concurrent grunt-contrib-jshint grunt-contrib-watch grunt-karma grunt-mocha-test grunt-nodemon
-npm install -g grunt-cli pm2
+npm install -g grunt-cli pm2 | tee -a $PS_LOG/enketo-install
 
 dpkg-reconfigure -plow -f noninteractive unattended-upgrades
 #debconf unattended-upgrades
@@ -41,13 +41,13 @@ cp ~/enketo-express/setup/redis/systemd/system/* /etc/systemd/system/
 
 systemctl disable redis
 systemctl daemon-reload
-systemctl start redis@redis-enketo-main
-systemctl enable redis@redis-enketo-main
-systemctl start redis@redis-enketo-cache
-systemctl enable redis@redis-enketo-cache
+systemctl start redis@redis-enketo-main && systemctl enable redis@redis-enketo-main
+systemctl start redis@redis-enketo-cache && systemctl enable redis@redis-enketo-cache
+echo 'Redis configurado' >> $PS_LOG/enketo-install
+ls -l /etc/redis >> $PS_LOG/enketo-install
 
 #cp ~/enketo-express/config/default-config.json ~/enketo-express/config/config.json
-#configurar
+#configurar enketo
 cp ~/scripts/config.json ~/enketo-express/config/config.json
 
 sudo -u $DEF_USER grunt
@@ -57,18 +57,27 @@ sudo -u $DEF_USER grunt
 sudo -u $DEF_USER pm2 start app.js -n enketo
 sudo -u $DEF_USER pm2 save
 #-u test/enketo
-pm2 startup -u $DEF_USER --hp ~
+(pm2 startup -u $DEF_USER --hp ~ && \
+echo 'Se ha configurado el servicio' || echo 'Error al configurar el servicio') >> $PS_LOG/enketo-install
 
 #crear webserver conf
 #cat /etc/nginx/sites-available/enketo
-cp ~/scripts/enketo /etc/nginx/sites-available/enketo
+#cp ~/scripts/enketo /etc/nginx/sites-available/enketo
+#proxy completo
+#cp ~/scripts/tomcat-proxy.conf /etc/nginx/sites-available/tomcat-proxy.conf
 #activar
-rm /etc/nginx/sites-enabled/default
-ln -s /etc/nginx/sites-available/enketo /etc/nginx/sites-enabled/enketo 
-service nginx restart
+#rm /etc/nginx/sites-enabled/default
+#ln -s /etc/nginx/sites-available/enketo /etc/nginx/sites-enabled/enketo 
+#ln -s /etc/nginx/sites-available/tomcat-proxy.conf /etc/nginx/sites-enabled/tomcat-proxy.conf
+#service nginx restart
+
+configurar proxy completo
+(sh ~/scripts/ngx && \
+echo 'Se ha configurado el proxy' || echo 'Error al configurar el proxy') >> $PS_LOG/enketo-install
 
 #reiniciar después de modificar conf.json -> grunt -> pm2 restart enketo
 
 #configurar api aggregate
-#url = http:...:8888/api/v1/
+#url = http://ejemplo.com:8080/api/v1/
+#c/ proxy: http://ejemplo.com/enketo/api/v1
 
