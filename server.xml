@@ -165,6 +165,58 @@
 
       </Host>
 
+	<!-- Redireccionar proxy -->
+	<Valve className="org.apache.catalina.valves.RemoteIpValve"
+		internalProxies="127\.0\.[0-1]\.1"
+		remoteIpHeader="x-forwarded-for"
+		requestAttributesEnabled="true"
+		protocolHeader="x-forwarded-proto"
+		protocolHeaderHttpsValue="https"/>
+<!-- Redireccionar proxy --> 
+<Valve className="org.apache.catalina.valves.RemoteIpValve" 
+internalProxies="127.0.[0-1].1" 
+remoteIpHeader="x-forwarded-for" 
+requestAttributesEnabled="true" 
+protocolHeader="x-forwarded-proto" 
+protocolHeaderHttpsValue="https"/>
+<!-- Redireccionar proxy --> 
+<Valve className="org.apache.catalina.valves.RemoteIpValve" 
+internalProxies="127\.0\.[0-1]\.1" 
+remoteIpHeader="x-forwarded-for" 
+requestAttributesEnabled="true" 
+protocolHeader="x-forwarded-proto" 
+protocolHeaderHttpsValue="https"/>
+<!-- Redireccionar proxy -->
+ 
+	<Valve className="org.apache.catalina.valves.RemoteIpValve" 
+		internalProxies="127\.0\.[0-1]\.1" 
+		remoteIpHeader="x-forwarded-for" 
+		requestAttributesEnabled="true" 
+		protocolHeader="x-forwarded-proto" 
+		protocolHeaderHttpsValue="https"/>
+n<!-- Redireccionar proxy --> 
+	<Valve className="org.apache.catalina.valves.RemoteIpValve" 
+		internalProxies="127\.0\.[0-1]\.1" 
+		remoteIpHeader="x-forwarded-for" 
+		requestAttributesEnabled="true" 
+		protocolHeader="x-forwarded-proto" 
+		protocolHeaderHttpsValue="https"/>
+	<!-- Redireccionar proxy --> 
+	<Valve className="org.apache.catalina.valves.RemoteIpValve" 
+		internalProxies="127\.0\.[0-1]\.1" 
+		remoteIpHeader="x-forwarded-for" 
+		requestAttributesEnabled="true" 
+		protocolHeader="x-forwarded-proto" 
+		protocolHeaderHttpsValue="https"/>
+n 
+	<!-- Redireccionar proxy --> 
+	<Valve className="org.apache.catalina.valves.RemoteIpValve" 
+		internalProxies="127\.0\.[0-1]\.1" 
+		remoteIpHeader="x-forwarded-for" 
+		requestAttributesEnabled="true" 
+		protocolHeader="x-forwarded-proto" 
+		protocolHeaderHttpsValue="https"/>
+ 
 	<!-- Redireccionar proxy --> 
 	<Valve className="org.apache.catalina.valves.RemoteIpValve" 
 		internalProxies="127\.0\.[0-1]\.1" 

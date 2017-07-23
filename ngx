@@ -9,8 +9,10 @@ echo "$(tput bold)Configurando nginx$(tput sgr0)"
 #rm /etc/nginx/sites-enabled/default && \
 #ln -s /etc/nginx/sites-available/tomcat-proxy.conf /etc/nginx/sites-enabled/tomcat-proxy.conf 
 
-(nginx -t && nginx -s reload && \
-echo 'nginx configurado' || echo 'error al configurar nginx') >> $PS_LOG/enketo-install
+#(
+nginx -t && nginx -s reload
+# && \
+#echo 'nginx configurado' || echo 'error al configurar nginx') >> $PS_LOG/enketo-install
 
 #configurando tomcat
 echo "$(tput bold)Configurando tomcat$(tput sgr0)"

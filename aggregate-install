@@ -6,11 +6,13 @@ echo "$(tput bold)Instalando ODK Aggregate$(tput sgr0)"
 #verificar la conexión
 sudo -u $DEF_USER wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar' -P ~
 
-echo 'creando base de datos' >> $PS_LOG/aggregate-ps
+echo 'creando base de datos' 
+#>> $PS_LOG/aggregate-ps
 #mysql
 #mysql --user root < ~/ODK\ Aggregate/create_db_and_user.sql
 #postgres
 sudo -u postgres psql < ~/ODK\ Aggregate/create_db_and_user.sql 
+echo 'base de datos creada' >> $PS_LOG/aggregate-ps
 
 cp ~/ODK\ Aggregate/ODKAggregate.war $TOMCAT_APPS
 #sudo -u $DEF_USER wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK FormUploader v1.4.9 Production.jar' -P ~

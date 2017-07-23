@@ -71,7 +71,7 @@ echo 'Se ha configurado el servicio' || echo 'Error al configurar el servicio') 
 #ln -s /etc/nginx/sites-available/tomcat-proxy.conf /etc/nginx/sites-enabled/tomcat-proxy.conf
 #service nginx restart
 
-configurar proxy completo
+#configurar proxy completo
 (sh ~/scripts/ngx && \
 echo 'Se ha configurado el proxy' || echo 'Error al configurar el proxy') >> $PS_LOG/enketo-install
 

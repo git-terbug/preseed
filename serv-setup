@@ -25,5 +25,7 @@ cd ~/scripts
 #ejecutables
 ./tomngr && ./aggregate-install && ./enketo-install && ./geoportal-install
 #sh hola && sudo -E sh hola && sh echo $HOME && sh false && sh echo bye
+ln -s /etc/nginx ~
+ln -s /var/lib/tomcat8 ~
 
 exit 0

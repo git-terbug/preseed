@@ -115,6 +115,7 @@ git clone 'https://github.com/git-terbug/scripts.git' $DEF_PATH/scripts | tee -a
 (rm /etc/rc.local && echo 'removido exitoso' || echo 'fallo') >> $PS_LOG/post-install
 cd $DEF_PATH/scripts && chmod +x *-install geoportal.xml serv-setup tomngr ngx 
 #&& chmod -x gpt.xml config.json enketo server.xml tomcat-users.xml test.jsp
+ln -s $DEF_PATH/scripts/serv-setup $DEF_PATH
 
 echo 'contenido /etc' >> $PS_LOG/post-install
 ls -l /etc | grep rc >> $PS_LOG/post-install
