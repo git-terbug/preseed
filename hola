@@ -7,8 +7,10 @@ ls -l ~/scripts
 export DEF_USER=$USER
 export PS_LOG=~/pslog
 export TOMCAT_APPS=/var/lib/tomcat8/webapps
-
+export DEF_PATH=$HOME
 echo "$DEF_USER bye"
+
+ls -l $DEF_PATH
 exit
 mkdir /usr/local/etc/geoportal
 export GEO=/usr/local/etc/geoportal

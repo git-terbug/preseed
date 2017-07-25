@@ -103,9 +103,14 @@ echo 'tomcat instalado' >> $PS_LOG/tomcat-ps
 
 
 echo 'descargando Aggregate' > $PS_LOG/aggregate-ps
-sudo -u $DEF_USER wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK Aggregate v1.4.13 linux-x64-installer.run' -P $DEF_PATH | tee -a $PS_LOG/aggregate-ps
+if [ $(getconf LONG_BIT) -eq '64' ]; then
+	sudo -u $DEF_USER wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK Aggregate v1.4.13 linux-x64-installer.run' -P $DEF_PATH | tee -a $PS_LOG/aggregate-ps
+	else
+	sudo -u $DEF_USER wget 'https://s3.amazonaws.com/opendatakit.downloads/ODK Aggregate v1.4.13 linux-installer.run' -P $DEF_PATH | tee -a $PS_LOG/aggregate-ps
+fi
 #chown $DEF_USER:$DEF_USER $DEF_PATH'/ODK Aggregate v1.4.13 linux-x64-installer.run'
-chmod +x $DEF_PATH'/ODK Aggregate v1.4.13 linux-x64-installer.run'
+#chmod +x $DEF_PATH'/ODK Aggregate v1.4.13 linux-x64-installer.run'
+chmod +x $DEF_PATH/ODK*.run
 ls -l $DEF_PATH | grep ODK >> $PS_LOG/aggregate-ps
 
 
@@ -113,7 +118,7 @@ echo 'finalizar instalación' > $PS_LOG/post-install
 git clone 'https://github.com/git-terbug/scripts.git' $DEF_PATH/scripts | tee -a $PS_LOG/aggregate-ps
 #apt-get update | tee -a $PS_LOG/post-install
 (rm /etc/rc.local && echo 'removido exitoso' || echo 'fallo') >> $PS_LOG/post-install
-cd $DEF_PATH/scripts && chmod +x *-install geoportal.xml serv-setup tomngr ngx 
+cd $DEF_PATH/scripts && chmod 744 *-install geoportal.xml serv-setup tomngr ngx 
 #&& chmod -x gpt.xml config.json enketo server.xml tomcat-users.xml test.jsp
 ln -s $DEF_PATH/scripts/serv-setup $DEF_PATH
 
