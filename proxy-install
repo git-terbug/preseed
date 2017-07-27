@@ -1,0 +1,66 @@
+#!/bin/bash -e
+#
+#configurar proxy
+
+#SCRIPTS=~/scripts
+NEW_CONF=$1
+OLD_CONF=$2
+SSL=$3
+
+if [ -z $NEW_CONF ]; then
+	read -p "Introduzca archivo de configuración: " NEW_CONF
+fi
+if [ -z $OLD_CONF ]; then
+	OLD_CONF=default
+fi
+if [ -z $SSL ]; then
+	SSL=0
+fi
+echo 'Configurando proxy' > $PS_LOG/proxy-install 
+
+#configurando nginx
+echo "$(tput bold)Configurando nginx$(tput sgr0)"
+sh $SCRIPTS/ngx $NEW_CONF $OLD_CONF
+
+#cp ~/scripts/tomcat-proxy.conf /etc/nginx/sites-available/tomcat-proxy.conf && \
+#rm /etc/nginx/sites-enabled/default && \
+#ln -s /etc/nginx/sites-available/tomcat-proxy.conf /etc/nginx/sites-enabled/tomcat-proxy.conf 
+
+#(nginx -t && nginx -s reload && \
+#echo 'nueva configuración exitosa' || echo 'error al configurar nginx') >> $PS_LOG/enketo-install
+
+#configurando tomcat
+
+if [ $SSL -eq '0' ]; then
+echo "$(tput bold)Configurando tomcat$(tput sgr0)"
+
+(sed -i.orig '/\/Engine/ i \ \
+	<!-- Redireccionar proxy --> \
+	<Valve className="org.apache.catalina.valves.RemoteIpValve" \
+		internalProxies="127\\.0\\.[0-1]\\.1" \
+		remoteIpHeader="x-forwarded-for" \
+		requestAttributesEnabled="true" \
+		protocolHeader="x-forwarded-proto" \
+		protocolHeaderHttpsValue="https"/>' /etc/tomcat8/server.xml && \
+echo "Se ha actualizado el archivo /etc/tomcat8/server.xml" || \
+echo 'ha ocurrido un error') >> $PS_LOG/proxy-install
+
+else
+echo "$(tput bold)Configurando tomcat SSL$(tput sgr0)"
+(sed -i.sslold -e '/<!-- Define an AJP/ i <Connector port="8443" protocol="HTTP/1.1" \
+               maxThreads="150" SSLEnabled="true" secure="true" scheme="https" \
+		clientAuth="false" sslProtocol="TLS" \
+		keystoreFile="'"$CERT_PATH"'/'"$CERT_NAME"'.pfx" \
+		keystoreType="PKCS12" \
+   		keystorePass="password" />' \
+	-e 's/<Server port="8005" shutdown="SHUTDOWN">/<!-- Puerto desactivado --> \
+	<Server port="-1" shutdown="SHUTDOWN">/' /etc/tomcat8/server.xml && \
+echo 'SSL: Se ha actualizado server.xml' || \
+echo 'SSL: Ha ocurrido un error') >> $PS_LOG/proxy-install 
+fi
+(systemctl restart tomcat8 && echo 'reinicio exitoso Tomcat' || echo 'falló el reinicio Tomcat') >> $PS_LOG/proxy-install
+exit
+
+
+
+

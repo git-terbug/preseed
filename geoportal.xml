@@ -1,6 +1,6 @@
 <!-- Context configuration file for the Geoportal Web App -->
 
-<Context docBase="geoportal" path="/geoportal" debug="0" reloadable="true" crossContext="true">
+<Context docBase="/usr/local/etc/geoportal/Web Applications/Geoportal/geoportal.war" path="" debug="0" reloadable="true" crossContext="true">
     <Resource name="jdbc/gpt" auth="Container" type="javax.sql.DataSource"
               driverClassName="org.postgresql.Driver"
               url="jdbc:postgresql://localhost:5432/postgres"

@@ -3,6 +3,7 @@
 #Instala Enketo
 
 #export DEF_USER=test
+#SCRIPTS=~/scripts
 echo "$(tput bold)Instalando Enketo$(tput sgr0)"
 
 #sudo apt-get install -y software-properties-common dirmngr 
@@ -17,6 +18,7 @@ echo 'Se ha detenido el servidor Apache' || echo 'No se ha podido detener Apache
 apt-get install -y git nginx-extras htop build-essential redis-server checkinstall python | tee -a $PS_LOG/enketo-install
 
 curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
+echo 'Instalando node.js'
 apt-get install -y nodejs
 #grunt-jsbeautifier grunt-concurrent grunt-contrib-jshint grunt-contrib-watch grunt-karma grunt-mocha-test grunt-nodemon
 npm install -g grunt-cli pm2 | tee -a $PS_LOG/enketo-install
@@ -26,6 +28,7 @@ dpkg-reconfigure -plow -f noninteractive unattended-upgrades
 echo	unattended-upgrades	unattended-upgrades/origins_pattern	string	"origin=Debian,codename=${distro_codename},label=Debian-Security" | debconf-set-selections
 echo	unattended-upgrades	unattended-upgrades/enable_auto_updates	boolean	true | debconf-set-selections
 
+echo 'Instalando enketo-express'
 cd ~
 sudo -u $DEF_USER git clone https://github.com/enketo/enketo-express.git
 cd enketo-express
@@ -33,14 +36,13 @@ sudo -u $DEF_USER npm install --production
 
 systemctl stop redis
 
+echo 'Instalando Redis'
 mv /etc/redis/redis.conf /etc/redis/redis-origin.conf
 cp ~/enketo-express/setup/redis/conf/redis-enketo-main.conf /etc/redis/
 cp ~/enketo-express/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
-
 cp ~/enketo-express/setup/redis/systemd/system/* /etc/systemd/system/
 
-systemctl disable redis
-systemctl daemon-reload
+systemctl disable redis && systemctl daemon-reload
 systemctl start redis@redis-enketo-main && systemctl enable redis@redis-enketo-main
 systemctl start redis@redis-enketo-cache && systemctl enable redis@redis-enketo-cache
 echo 'Redis configurado' >> $PS_LOG/enketo-install
@@ -48,12 +50,14 @@ ls -l /etc/redis >> $PS_LOG/enketo-install
 
 #cp ~/enketo-express/config/default-config.json ~/enketo-express/config/config.json
 #configurar enketo
-cp ~/scripts/config.json ~/enketo-express/config/config.json
+cp $SCRIPTS/config.json ~/enketo-express/config/config.json
 
+echo 'Configurando enketo-express'
 sudo -u $DEF_USER grunt
 
 #npm start
 
+echo 'Instalando servicio'
 sudo -u $DEF_USER pm2 start app.js -n enketo
 sudo -u $DEF_USER pm2 save
 #-u test/enketo
@@ -72,7 +76,7 @@ echo 'Se ha configurado el servicio' || echo 'Error al configurar el servicio') 
 #service nginx restart
 
 #configurar proxy completo
-(sh ~/scripts/ngx && \
+(sh $SCRIPTS/proxy-install tomcat-proxy.conf && \
 echo 'Se ha configurado el proxy' || echo 'Error al configurar el proxy') >> $PS_LOG/enketo-install
 
 #reiniciar después de modificar conf.json -> grunt -> pm2 restart enketo

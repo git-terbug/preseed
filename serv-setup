@@ -4,11 +4,12 @@
 #ejecutar sh serv-setup
 
 export DEF_USER=$USER
+export SCRIPTS=~/scripts
 export PS_LOG=~/pslog
 export TOMCAT_APPS=/var/lib/tomcat8/webapps
 
 #echo "\033[1mInstalando componentes\033[0m" #negritas ANSI
-echo "$(tput bold)Instalando componentes$(tput sgr0)"
+#echo "$(tput bold)Instalando componentes$(tput sgr0)"
 #echo 'Instalando ODK Aggregate'
 #sudo -E sh ~/scripts/aggregate-install
 #echo 'Instalando Enketo'
@@ -20,10 +21,20 @@ echo "$(tput bold)Instalando componentes$(tput sgr0)"
 #asignar usuario manualmente
 export DEF_USER=$1
 #export DEF_PATH=/home/$DEF_USER
-cd ~/scripts
+
+if [ -z $DEF_USER ];then
+	echo 'Este comando debe utilizarse: $sudo -E sh serv-setup usuario'
+	exit
+fi
+
+echo "$(tput bold)Instalando componentes$(tput sgr0)"
+cd $SCRIPTS
 #sh ~/scripts/aggregate-install && sh ~/scripts/enketo-install && sh ~/scripts/geoportal-install
 #ejecutables
 ./tomngr && ./aggregate-install && ./enketo-install && ./geoportal-install
+#instalar ssl
+#./ssl-setup
+
 #sh hola && sudo -E sh hola && sh echo $HOME && sh false && sh echo bye
 ln -s /etc/nginx ~
 ln -s /var/lib/tomcat8 ~

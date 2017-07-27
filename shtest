@@ -1,6 +1,7 @@
 #!/bin/sh -e
-mkdir /usr/local/etc/hola
-echo ~
+#mkdir /usr/local/etc/hola
+echo $DEF_USER
+exit
 #env	|	less
 echo $HOME/hola 
 echo $LOGNAME
