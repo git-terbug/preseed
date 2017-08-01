@@ -11,6 +11,7 @@ mkdir /usr/local/etc/geoportal
 export GEO=/usr/local/etc/geoportal
 mkdir /usr/local/etc/lucene
 mkdir /usr/local/etc/lucene/assertion
+chown -R tomcat8:tomcat8 /usr/local/etc/lucene
 echo 'Creando directorios' > $PS_LOG/geo-install
 ls /usr/local/etc >> $PS_LOG/geo-install
 
@@ -48,6 +49,7 @@ echo -e '\nInstalando Geoportal' >> $PS_LOG/geo-install
 
 ##Configurando root##
 mv $TOMCAT_APPS/ROOT ~/ROOT.old
+cp $SCRIPTS/geoportal.war $GEO
 cp $SCRIPTS/geoportal.xml /etc/tomcat8/Catalina/localhost/ROOT.xml
 #chown root:tomcat8 /etc/tomcat8/Catalina/localhost/ROOT.xml
 sudo chmod +wx /etc/tomcat8/Catalina/localhost/ROOT.xml
@@ -57,37 +59,37 @@ ls -l /etc/tomcat8/Catalina/localhost >> $PS_LOG/geo-install
 #descomentar dobles si no se quiere como raíz
 ##cp $GEO'/Web Applications/Geoportal/geoportal.war' $TOMCAT_APPS
 ##until [ -e $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml ]; do
-
 until [ -e $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml ]; do
 echo 'Esperando el despliegue'
 sleep 1
 done
 ##mv $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml.orig
-mv $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml.orig
+#mv $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml.orig
 
 ##cp $SCRIPTS/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
-cp $SCRIPTS/gpt.xml $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml
+#cp $SCRIPTS/gpt.xml $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml
 
 #chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+chown -R tomcat8:tomcat8 $TOMCAT_APPS/ROOT
 ls -l $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config >> $PS_LOG/geo-install
 
 #configurar locales
-echo 'Instalando locales'
+#echo 'Instalando locales'
 ##until [ -e $TOMCAT_APPS/geoportal/WEB-INF/gpt-faces-config.xml ]; do
-until [ -e $TOMCAT_APPS/ROOT/WEB-INF/gpt-faces-config.xml ]; do
-echo 'Esperando el despliegue'
-sleep 1
-done
+#until [ -e $TOMCAT_APPS/ROOT/WEB-INF/gpt-faces-config.xml ]; do
+#echo 'Esperando el despliegue'
+#sleep 1
+#done
 ##sed -i.orig '/\/locale-config/ i <supported-locale>es-mx</supported-locale> \
 ##	<supported-locale>es</supported-locale>' $TOMCAT_APPS/geoportal/WEB-INF/gpt-faces-config.xml
-sed -i.orig '/\/locale-config/ i <supported-locale>es-mx</supported-locale> \
-	<supported-locale>es</supported-locale>' $TOMCAT_APPS/ROOT/WEB-INF/gpt-faces-config.xml
+#sed -i.orig '/\/locale-config/ i <supported-locale>es-mx</supported-locale> \
+#	<supported-locale>es</supported-locale>' $TOMCAT_APPS/ROOT/WEB-INF/gpt-faces-config.xml
 
-native2ascii $SCRIPTS/gpt_es-mx.properties $SCRIPTS/gpt_es.properties
+#native2ascii $SCRIPTS/gpt_es-mx.properties $SCRIPTS/gpt_es.properties
 ##cp $SCRIPTS/gpt_es.properties $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/resources/gpt_es.properties
-cp $SCRIPTS/gpt_es.properties $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources/gpt_es.properties
+#cp $SCRIPTS/gpt_es.properties $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources/gpt_es.properties
 ##chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/resources/gpt_es.properties
-chown tomcat8:tomcat8 $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources/gpt_es.properties
+#chown tomcat8:tomcat8 $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources/gpt_es.properties
 ls -l $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources >> $PS_LOG/geo-install
 
 ##cp ~/scripts/geoportal.xml /etc/tomcat8/Catalina/localhost/geoportal.xml
@@ -95,11 +97,11 @@ ls -l $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources >> $PS_LOG/geo-install
 ##sudo chmod +wx /etc/tomcat8/Catalina/localhost/geoportal.xml
 ##ls -l /etc/tomcat8/Catalina/localhost >> $PS_LOG/geo-install 
 
-#configurar root
+#configurar root server.xml (no recomendado)
 #sed -i  '/\/Host/ i <Context path="" docBase="geoportal"></Context> \
 #	<!-- debug="0" reloadable="true"> -->' /etc/tomcat8/server.xml
 
 echo -e '\nReiniciando procesos' >> $PS_LOG/geo-install
 (systemctl restart postgresql && echo 'reinicio exitoso Postgresql' || echo 'falló el reinicio Postgresql') >> $PS_LOG/geo-install
-#(systemctl restart tomcat8 && echo 'reinicio exitoso Tomcat' || echo 'falló el reinicio Tomcat') >> $PS_LOG/geo-install
+(systemctl restart tomcat8 && echo 'reinicio exitoso Tomcat' || echo 'falló el reinicio Tomcat') >> $PS_LOG/geo-install
 exit

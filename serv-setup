@@ -4,8 +4,8 @@
 #ejecutar sh serv-setup
 
 export DEF_USER=$USER
-export SCRIPTS=~/scripts
-export PS_LOG=~/pslog
+export SCRIPTS=$HOME/scripts
+export PS_LOG=$HOME/pslog
 export TOMCAT_APPS=/var/lib/tomcat8/webapps
 
 #echo "\033[1mInstalando componentes\033[0m" #negritas ANSI

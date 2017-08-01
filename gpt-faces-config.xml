@@ -688,6 +688,15 @@
     </navigation-case>
   </navigation-rule>
       
+<!-- Aggregate pages -->
+  <navigation-rule> 
+    <navigation-case>
+      <from-outcome>catalog.datos.home</from-outcome>
+      <to-view-id>/catalog/datos/datos.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+  
   <!-- browse page -->
   <navigation-rule>
     <navigation-case>

@@ -3,6 +3,9 @@
 export CERT_NAME=$1
 export CERT_PATH=$2
 export CERT_CONF=scert.cnf
+NEW CONF=tomcat-ssl.conf
+OLD_CONF=tomcat-proxy.conf
+
 #PS_LOG=~/pslog
 #SCRIPTS=~/scripts
 
@@ -51,7 +54,8 @@ ls -l $CERT_PATH >> $PS_LOG/ssl-setup
 cp $SCRIPTS/ssl-cert.conf /etc/nginx/snippets/ssl-cert.conf
 cp $SCRIPTS/ssl-params.conf /etc/nginx/snippets/ssl-params.conf
 
-sh $SCRIPTS/proxy-install tomcat-ssl.conf tomcat-proxy.conf ssl
+sh $SCRIPTS/proxy-install $NEW_CONF $OLD_CONF ssl
+#sh $SCRIPTS/proxy-install tomcat-ssl.conf tomcat-proxy.conf ssl
 
 #sh $SCRIPTS/ngx tomcat-ssl.conf tomcat-proxy.conf
 #cp ~/scripts/tomcat-ssl.conf /etc/nginx/sites-available/tomcat-ssl.conf && \

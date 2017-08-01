@@ -13,9 +13,9 @@ fi
 if [ -z $OLD_CONF ]; then
 	OLD_CONF=default
 fi
-if [ -z $SSL ]; then
-	SSL=0
-fi
+#if [ -z $SSL ]; then
+#	SSL=0
+#fi
 echo 'Configurando proxy' > $PS_LOG/proxy-install 
 
 #configurando nginx
@@ -31,7 +31,8 @@ sh $SCRIPTS/ngx $NEW_CONF $OLD_CONF
 
 #configurando tomcat
 
-if [ $SSL -eq '0' ]; then
+#if [ $SSL -eq '0' ]; then
+if [ -z $SSL ]; then
 echo "$(tput bold)Configurando tomcat$(tput sgr0)"
 
 (sed -i.orig '/\/Engine/ i \ \
