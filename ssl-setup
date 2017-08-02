@@ -1,0 +1,68 @@
+#!/bin/bash -e
+
+export CERT_NAME=$1
+export CERT_PATH=$2
+export CERT_CONF=scert.cnf
+NEW CONF=tomcat-ssl.conf
+OLD_CONF=tomcat-proxy.conf
+
+#PS_LOG=~/pslog
+#SCRIPTS=~/scripts
+
+if [ -z $CERT_NAME ]; then
+	read -p "Intoduzca nombre del certificado: " CERT_NAME
+fi
+if [ -z $CERT_PATH ]; then
+	CERT_PATH=/etc/ssl/private
+fi
+
+echo 'Creando certificado'
+#openssl genrsa -out $CERT_PATH/$CERT_NAME.key 4096
+#openssl req -new -key $CERT_PATH/$CERT_NAME.key -out $CERT_PATH/$CERT_NAME.csr
+
+#self-signed
+openssl req -x509 -nodes -days 365 -config $CERT_CONF -newkey rsa:4096 -keyout $CERT_PATH/$CERT_NAME.key -out $CERT_PATH/$CERT_NAME.crt
+openssl dhparam -out $CERT_PATH/dhparam.pem 4096
+
+#export
+openssl pkcs12 -export -in $CERT_PATH/$CERT_NAME.crt -inkey $CERT_PATH/$CERT_NAME.key -out $CERT_PATH/$CERT_NAME.pfx
+chmod 644 $CERT_PATH/$CERT_NAME.pfx
+chown -R root:ssl-cert $CERT_PATH
+usermod -a -G ssl-cert tomcat8
+echo 'Certificados creados' > $PS_LOG/ssl-setup
+ls -l $CERT_PATH >> $PS_LOG/ssl-setup
+
+#configurar tomcat
+#echo 'Configurando tomcat SSL'
+#(sed -i.sslold -e '/<!-- Define an AJP/ i <Connector port="8443" protocol="HTTP/1.1" \
+#               maxThreads="150" SSLEnabled="true" secure="true" scheme="https" \
+#		clientAuth="false" sslProtocol="TLS" \
+#		keystoreFile="'"$CERT_PATH"'/'"$CERT_NAME"'.pfx" \
+#		keystoreType="PKCS12" \
+#   		keystorePass="password" />' \
+#	-e 's/<Server port="8005" shutdown="SHUTDOWN">/<!-- Puerto desactivado --> \
+#	<Server port="-1" shutdown="SHUTDOWN">/' /etc/tomcat8/server.xml && \
+#echo 'Se ha actualizado server.xml' || \
+#echo 'ha ocurrido un error') >> $PS_LOG/ssl-setup 
+
+#systemctl restart tomcat8
+
+#configurar nginx
+#echo 'Configurando nginx SSL'
+
+#confirmar manualmente los directorios
+cp $SCRIPTS/ssl-cert.conf /etc/nginx/snippets/ssl-cert.conf
+cp $SCRIPTS/ssl-params.conf /etc/nginx/snippets/ssl-params.conf
+
+sh $SCRIPTS/proxy-install $NEW_CONF $OLD_CONF ssl
+#sh $SCRIPTS/proxy-install tomcat-ssl.conf tomcat-proxy.conf ssl
+
+#sh $SCRIPTS/ngx tomcat-ssl.conf tomcat-proxy.conf
+#cp ~/scripts/tomcat-ssl.conf /etc/nginx/sites-available/tomcat-ssl.conf && \
+#rm /etc/nginx/sites-enabled/tomcat-proxy.conf && \
+#ln -s /etc/nginx/sites-available/tomcat-ssl.conf /etc/nginx/sites-enabled/tomcat-ssl.conf 
+
+#nginx -t && nginx -s reload
+tail -n 3 $PS_LOG/proxy-install >> $PS_LOG/ssl-setup
+
+exit

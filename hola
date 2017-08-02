@@ -1,0 +1,47 @@
+echo 'Hola mundo'
+#echo $HOME
+#echo $USER
+
+#mkdir /usr/local/etc/qwety
+#ls -l ~/scripts
+
+export DEF_USER=oye
+sh shtest
+exit
+DEF_USER=$1
+if [ -z $DEF_USER ]; then
+	DEF_USER=default
+fi
+sed -i.sslold '/<!-- Define an AJP/ i <Connector port="8443" protocol="HTTP/1.1" \
+               maxThreads="150" SSLEnabled="true" secure="true" scheme="https" \
+		clientAuth="false" sslProtocol="TLS" \
+		keystoreFile="'"$DEF_USER"'/'"$DEF_USER"'.pfx" \
+		keystoreType="PKCS12" \
+   		keystorePass="password" />' server2.xml 
+
+echo 'Creando certificado'
+openssl genrsa -out $DEF_USER.key 4096
+
+export PS_LOG=~/pslog
+export TOMCAT_APPS=/var/lib/tomcat8/webapps
+export DEF_PATH=$HOME
+echo "$DEF_USER bye"
+exit
+ls -l $DEF_PATH
+exit
+mkdir /usr/local/etc/geoportal
+export GEO=/usr/local/etc/geoportal
+cd $GEO'/Database Scripts/PostgreSQL'
+#agregar contraseña postgres
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'hola';" >> $PS_LOG/geo
+sudo su postgres grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportal 
+sudo su postgres create_schema_linuxpg.sh localhost 5432 postgres geoportal
+sudo -u postgres psql -c "\dn" >> $PS_LOG/geo
+sudo -u postgres psql -c "\dtvs geoportal.*" >> $PS_LOG/geo
+
+mv $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml.old
+cp ~/scripts/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+
+cp ~/scripts/geoportal.xml /etc/tomcat8/Catalina/localhost/geoportal.xml
+chown root:tomcat8 /etc/tomcat8/Catalina/localhost/geoportal.xml

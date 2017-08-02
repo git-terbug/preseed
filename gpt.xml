@@ -542,7 +542,7 @@
                 <role key="gptAdministrator"/>
             </roles>
         </simpleAdapter>
-        -->
+        
         
 				<!-- 
 					Identity adapter when using ArcGIS Online or Portal as the identity store.

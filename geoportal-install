@@ -1,42 +1,107 @@
-sudo mkdir /usr/local/etc/geoportal
-sudo mkdir /usr/local/etc/lucene
-sudo mkdir /usr/local/etc/lucene/assertion
-ls /usr/local/etc > $PS_LOG/geo
+#!/bin/bash -e
+#
+#Instala geoportal
+#export DEF_USER=$USER
+#export PS_LOG=~/pslog
+#export TOMCAT_APPS=/var/lib/tomcat8/webapps
 
-sudo adduser geoportal --gecos "" --disabled-password
+echo "$(tput bold)Instalando Geoportal$(tput sgr0)"
+
+mkdir /usr/local/etc/geoportal
+export GEO=/usr/local/etc/geoportal
+mkdir /usr/local/etc/lucene
+mkdir /usr/local/etc/lucene/assertion
+chown -R tomcat8:tomcat8 /usr/local/etc/lucene
+echo 'Creando directorios' > $PS_LOG/geo-install
+ls /usr/local/etc >> $PS_LOG/geo-install
+
+adduser geoportal --gecos "" --disabled-password
 echo "geoportal:password" | sudo chpasswd
-sudo addgroup geoportal sudo
+addgroup geoportal sudo
 #su geoportal
-cd /usr/local/etc/geoportal
-sudo wget https://github.com/Esri/geoportal-server/releases/download/v1.2.8/geoportal-1.2.8.zip
-sudo unzip geoportal-1.2.8.zip
-ls -l >> $PS_LOG/geo
+cd $GEO
+wget https://github.com/Esri/geoportal-server/releases/download/v1.2.8/geoportal-1.2.8.zip
+unzip geoportal-1.2.8.zip
+echo 'Descomprimiendo' >> $PS_LOG/geo-install
+ls -l >> $PS_LOG/geo-install
 
-cd '/usr/local/etc/geoportal/Database Scripts'
-sudo chown -R postgres:postgres '/usr/local/etc/geoportal/Database Scripts/PostgreSQL'
-sudo chmod -R +x '/usr/local/etc/geoportal/Database Scripts/PostgreSQL'
-cd '/usr/local/etc/geoportal/Database Scripts/PostgreSQL'
-ls -l >> $PS_LOG/geo
+echo -e '\nAsignar permisos' >> $PS_LOG/geo-install
+cd $GEO'/Database Scripts'
+chown -R postgres:postgres $GEO'/Database Scripts/PostgreSQL'
+chmod -R +x $GEO'/Database Scripts/PostgreSQL'
+cd $GEO'/Database Scripts/PostgreSQL'
+ls -l >> $PS_LOG/geo-install
 
 dos2unix grants_linuxpg.sh
 dos2unix grants_pg.sql
 dos2unix create_schema_linuxpg.sh
 dos2unix schema_pg.sql
 
+echo -e '\nCreando la base de datos' >> $PS_LOG/geo-install
 #agregar contraseña postgres
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'password';" >> $PS_LOG/geo
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'hola';" #>> $PS_LOG/geo-install
 sudo su postgres grants_linuxpg.sh localhost 5432 postgres geoportal postgres geoportal 
 sudo su postgres create_schema_linuxpg.sh localhost 5432 postgres geoportal
-sudo -u postgres psql -c "\dn" >> $PS_LOG/geo
-sudo -u postgres psql -c "\dtvs geoportal.*" >> $PS_LOG/geo
+sudo -u postgres psql -c "\dn" >> $PS_LOG/geo-install
+sudo -u postgres psql -c "\dtvs geoportal.*" >> $PS_LOG/geo-install
 
-sudo cp '/usr/local/etc/geoportal/Web Applications/Geoportal/geoportal.war' /var/lib/tomcat8/webapps
-sudo systemctl restart postgresql
-sudo systemctl restart tomcat8
-sudo mv /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml.old
-sudo cp $DEF_PATH/scripts/gpt.xml /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml
-sudo chown tomcat8:tomcat8 /var/lib/tomcat8/webapps/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+echo -e '\nInstalando Geoportal' >> $PS_LOG/geo-install
 
-sudo cp $DEF_PATH/scripts/geoportal.xml /etc/tomcat8/Catalina/localhost/geoportal.xml
-sudo chown root:tomcat8 /etc/tomcat8/Catalina/localhost/geoportal.xml
-#sudo chmod +wx geoportal.xml
+##Configurando root##
+mv $TOMCAT_APPS/ROOT ~/ROOT.old
+cp $SCRIPTS/geoportal.war $GEO
+cp $SCRIPTS/geoportal.xml /etc/tomcat8/Catalina/localhost/ROOT.xml
+#chown root:tomcat8 /etc/tomcat8/Catalina/localhost/ROOT.xml
+sudo chmod +wx /etc/tomcat8/Catalina/localhost/ROOT.xml
+ls -l /etc/tomcat8/Catalina/localhost >> $PS_LOG/geo-install 
+####
+
+#descomentar dobles si no se quiere como raíz
+##cp $GEO'/Web Applications/Geoportal/geoportal.war' $TOMCAT_APPS
+##until [ -e $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml ]; do
+until [ -e $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml ]; do
+echo 'Esperando el despliegue'
+sleep 1
+done
+##mv $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml.orig
+#mv $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml.orig
+
+##cp $SCRIPTS/gpt.xml $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+#cp $SCRIPTS/gpt.xml $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config/gpt.xml
+
+#chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/config/gpt.xml
+chown -R tomcat8:tomcat8 $TOMCAT_APPS/ROOT
+ls -l $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/config >> $PS_LOG/geo-install
+
+#configurar locales
+#echo 'Instalando locales'
+##until [ -e $TOMCAT_APPS/geoportal/WEB-INF/gpt-faces-config.xml ]; do
+#until [ -e $TOMCAT_APPS/ROOT/WEB-INF/gpt-faces-config.xml ]; do
+#echo 'Esperando el despliegue'
+#sleep 1
+#done
+##sed -i.orig '/\/locale-config/ i <supported-locale>es-mx</supported-locale> \
+##	<supported-locale>es</supported-locale>' $TOMCAT_APPS/geoportal/WEB-INF/gpt-faces-config.xml
+#sed -i.orig '/\/locale-config/ i <supported-locale>es-mx</supported-locale> \
+#	<supported-locale>es</supported-locale>' $TOMCAT_APPS/ROOT/WEB-INF/gpt-faces-config.xml
+
+#native2ascii $SCRIPTS/gpt_es-mx.properties $SCRIPTS/gpt_es.properties
+##cp $SCRIPTS/gpt_es.properties $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/resources/gpt_es.properties
+#cp $SCRIPTS/gpt_es.properties $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources/gpt_es.properties
+##chown tomcat8:tomcat8 $TOMCAT_APPS/geoportal/WEB-INF/classes/gpt/resources/gpt_es.properties
+#chown tomcat8:tomcat8 $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources/gpt_es.properties
+ls -l $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources >> $PS_LOG/geo-install
+
+##cp ~/scripts/geoportal.xml /etc/tomcat8/Catalina/localhost/geoportal.xml
+#chown root:tomcat8 /etc/tomcat8/Catalina/localhost/geoportal.xml
+##sudo chmod +wx /etc/tomcat8/Catalina/localhost/geoportal.xml
+##ls -l /etc/tomcat8/Catalina/localhost >> $PS_LOG/geo-install 
+
+#configurar root server.xml (no recomendado)
+#sed -i  '/\/Host/ i <Context path="" docBase="geoportal"></Context> \
+#	<!-- debug="0" reloadable="true"> -->' /etc/tomcat8/server.xml
+
+echo -e '\nReiniciando procesos' >> $PS_LOG/geo-install
+(systemctl restart postgresql && echo 'reinicio exitoso Postgresql' || echo 'falló el reinicio Postgresql') >> $PS_LOG/geo-install
+(systemctl restart tomcat8 && echo 'reinicio exitoso Tomcat' || echo 'falló el reinicio Tomcat') >> $PS_LOG/geo-install
+exit
