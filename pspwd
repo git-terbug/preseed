@@ -1,0 +1,43 @@
+#!/bin/bash -e
+#
+#Actualizar preseed
+
+echo 'Configurar usuarios preseed.cfg'
+read -p "Usuario: " us
+us=${us:-admin}
+read -p "Nombre completo: " nom
+nom=${nom:-$us}
+read -p "Nombre del host: " hn
+hn=${hn:-debian}
+read -p "contraseña: " pass
+pass=${pass:-admin}
+read -p "scripts URL: " scurl
+scurl=${scurl:-192.168.56.101/preseed}
+
+pwd=$(mkpasswd -R 1000000 -m sha-512 "$pass")
+echo "mi us: $us \nmi nom: $nom \nmi pass: $pass \nmi pwd: $pwd \nmi host: $hn \nmi url: $scurl"
+
+(sed -i.old -e 's/d-i passwd\/username string .*/d-i passwd\/username string '"$us"'/' \
+	-e 's/d-i passwd\/user-fullname string .*/d-i passwd\/user-fullname string '"$nom"'/' \
+	-e 's,.* passwd/user-password-crypted password .*,d-i passwd/user-password-crypted password '"$pwd"',' \
+	-e '/d-i passwd\/user-password password .*/s/^/#/' \
+	-e '/d-i passwd\/user-password-again password .*/s/^/#/' \
+	-e '/^#/! s,d-i netcfg/get_hostname string .*,d-i netcfg/get_hostname string '"$hn"',' \
+	-e 's,wget http://.*/rc.local,wget http://'"$scurl"'/rc.local,' preseed.cfg && \
+echo 'Se ha actualizado preseed.cfg' || echo 'ha ocurrido un error') 
+
+#	
+#	funciona sólo si la linea está comentada
+#	-e 's,\#d-i passwd/user-password-crypted password \[crypt(3) hash\],d-i passwd/user-password-crypted password '"$pwd"',' \
+
+#	funcionan 
+#	-e 's,.* passwd/user-password-crypted password .*,d-i passwd/user-password-crypted password '"$pwd"',' \
+
+#	modifica todas las lineas coincidentes
+#	-e 's,d-i netcfg/get_hostname string .*,d-i netcfg/get_hostname string '"$hn"',' \
+
+#	funciona pero no borra espacios en blanco probar /^# / ó /^#./ 	
+#	-e '/d-i passwd\/user-password-crypted password .*/ s/^#//; s,d-i passwd/user-password-crypted password .*,d-i passwd/user-password-crypted password '"$pwd"',' \
+	
+#	-e '/^#/ s,d-i passwd/user-password-crypted password .*,d-i passwd/user-password-crypted password '"$pwd"',' \
+	

@@ -101,6 +101,21 @@ ls -l $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources >> $PS_LOG/geo-install
 #sed -i  '/\/Host/ i <Context path="" docBase="geoportal"></Context> \
 #	<!-- debug="0" reloadable="true"> -->' /etc/tomcat8/server.xml
 
+#instalando geoserver
+echo 'Instalando geoserver'
+sudo -u $DEF_USER wget https://sourceforge.net/projects/geoserver/files/GeoServer/2.11.2/geoserver-2.11.2-war.zip
+unzip geoserver-2.11.2-war.zip -d ~/geoserver
+until [ -e ~/geoserver/geoserver.war ]; do
+echo 'Descomprimiendo'
+sleep 1
+done
+cp $HOME/geoserver/geoserver.war $TOMCAT_APPS
+cd $TOMCAT_APPS
+ls -l >> $PS_LOG/geo-install
+
+#descargando geonetwork
+sudo -u $DEF_USER wget https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v3.2.1/geonetwork.war
+
 echo -e '\nReiniciando procesos' >> $PS_LOG/geo-install
 (systemctl restart postgresql && echo 'reinicio exitoso Postgresql' || echo 'falló el reinicio Postgresql') >> $PS_LOG/geo-install
 (systemctl restart tomcat8 && echo 'reinicio exitoso Tomcat' || echo 'falló el reinicio Tomcat') >> $PS_LOG/geo-install

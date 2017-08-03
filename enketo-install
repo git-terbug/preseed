@@ -79,6 +79,17 @@ echo 'Se ha configurado el servicio' || echo 'Error al configurar el servicio') 
 (sh $SCRIPTS/proxy-install tomcat-proxy.conf && \
 echo 'Se ha configurado el proxy' || echo 'Error al configurar el proxy') >> $PS_LOG/enketo-install
 
+apt-get install -y fail2ban
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+service fail2ban restart
+
+#configurar firewall
+#ufw allow ssh
+#ufw allow 80
+#ufw allow 443
+#ufw enable
+#ufw status
+
 #reiniciar después de modificar conf.json -> grunt -> pm2 restart enketo
 
 #configurar api aggregate
