@@ -4,9 +4,53 @@ echo 'Hola mundo'
 
 #mkdir /usr/local/etc/qwety
 #ls -l ~/scripts
+adios=wely
+scurl='1./ay/jualma'
+space_var="wget http"
+export DEF_USER="-e "'s/adios/'"$adios"'/'" \
+	-e "'/mundo/s/^/#/'" \
+	-e "'/hola\/welt/s/^/#/'" /home/test/scripts/ech"
 
-export DEF_USER=oye
-sh shtest
+read -p "¿Instalar mediante USB?: " pusb
+pusb=${pusb:-}
+
+if [ -z $pusb ]; then
+metod=URL
+read -p "scrul: " scurl
+scurl=${scurl:-56.aye/yo}
+#sedvar="-e 's|wget http://.*/rc.local|wget http://'"$scurl"'/rc.local|'"
+sedvar="wget http://"$scurl"/rc.local -P"
+# /home/test/scripts/ech"
+#sedvar=""'s/wget http://.*/rc.local/wget http://'"$adios"'/rc.local/'" /home/test/scripts/ech"
+#sh shtest
+#sed -i.old -e $sedvar $DEF_USER
+else
+metod=USB
+sedvar="cp /media/rc.local"
+fi
+echo $metod
+
+rnum=$(shuf -i 500000-5000000 -n 1)
+pwd=$(mkpasswd -R $rnum -m sha-512 "$pass")
+echo $pwd
+sed -e '/Post-install/ a #Instalando mediante '"$metod"'' \
+	-e 's|wget http://.*/rc.local -P|'"$sedvar"'|' ech
+exit
+
+#adios='auf man'
+adios="1./ay/jualmao"
+space_var="wget http"
+export DEF_USER="-e "'s/adios/'"$adios"'/'" \
+	-e "'/mundo/s/^/#/'" \
+	-e "'/hola\/welt/s/^/#/'" /home/test/scripts/ech"
+
+#sedvar=""'s/welt/'"$adios"'/'" /home/test/scripts/ech"
+sedvar="-e "'s|http://.*/rc.local|http://'"$adios"'/rc.local|'""
+# /home/test/scripts/ech"
+#sedvar=""'s/wget http://.*/rc.local/wget http://'"$adios"'/rc.local/'" /home/test/scripts/ech"
+#sh shtest
+#sed -i.old -e $sedvar $DEF_USER
+sed $sedvar ech
 exit
 DEF_USER=$1
 if [ -z $DEF_USER ]; then
