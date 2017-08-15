@@ -1,0 +1,18 @@
+#!/bin/bash -e
+#
+#Instalar vbox additions
+
+VCOMP=vboxcomp
+us=test
+
+apt-get -y install linux-headers-$(uname -r) dkms build-essential
+
+sh /media/cdrom/VBoxLinuxAdditions.run
+
+#crear carpeta compartida
+
+usermod -a -G vboxsf $us
+
+mkdir /mnt/comp
+
+mount -t vboxsf $VCOMP /mnt/comp
