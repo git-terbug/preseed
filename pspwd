@@ -4,7 +4,7 @@
 
 echo "$(tput bold)Configurando usuarios preseed.cfg$(tput sgr0)"
 read -p "Usuario: " us
-us=${us:-admin}
+us=${us:-debian}
 read -p "Nombre completo: " nom
 nom=${nom:-$us}
 read -p "Nombre del host: " hn

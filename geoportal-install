@@ -103,7 +103,7 @@ ls -l $TOMCAT_APPS/ROOT/WEB-INF/classes/gpt/resources >> $PS_LOG/geo-install
 
 #instalando geoserver
 echo 'Instalando geoserver'
-sudo -u $DEF_USER wget https://sourceforge.net/projects/geoserver/files/GeoServer/2.11.2/geoserver-2.11.2-war.zip
+sudo -u $DEF_USER wget --retry-connrefused --read-timeout=20 --timeout=15 https://sourceforge.net/projects/geoserver/files/GeoServer/2.11.2/geoserver-2.11.2-war.zip
 unzip geoserver-2.11.2-war.zip -d ~/geoserver
 until [ -e ~/geoserver/geoserver.war ]; do
 echo 'Descomprimiendo'
@@ -114,7 +114,7 @@ cd $TOMCAT_APPS
 ls -l >> $PS_LOG/geo-install
 
 #descargando geonetwork
-sudo -u $DEF_USER wget https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v3.2.1/geonetwork.war
+sudo -u $DEF_USER wget --retry-connrefused --read-timeout=20 --timeout=15 https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v3.2.1/geonetwork.war
 
 echo -e '\nReiniciando procesos' >> $PS_LOG/geo-install
 (systemctl restart postgresql && echo 'reinicio exitoso Postgresql' || echo 'falló el reinicio Postgresql') >> $PS_LOG/geo-install

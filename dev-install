@@ -15,11 +15,11 @@ sudo -u $DEF_USER /opt/android-studio/bin/studio.sh
 add-apt-repository ppa:webupd8team/java
 apt-get update
 echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 boolean true' | debconf-set-selections
-apt-get install oracle-java8-set-default
-apt-get install oracle-java8-installer
+apt-get -y install oracle-java8-set-default
+apt-get -y install oracle-java8-installer
 
 #instalar eclipse
-apt-get install eclipse eclipse-cdt eclipse-cdt-autotools eclipse-emf eclipse-gef eclipse-pydev eclipse-wtp eclipse-wtp-servertools eclipse-wtp-webtools \
+apt-get -y install eclipse eclipse-cdt eclipse-cdt-autotools eclipse-emf eclipse-gef eclipse-pydev eclipse-wtp eclipse-wtp-servertools eclipse-wtp-webtools \
 	gradle libautocomplete-java maven \
 	festival festival-doc festival-freebsoft-utils festvox-ellpc11k speech-dispatcher-festival speech-tools
 

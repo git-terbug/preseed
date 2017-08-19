@@ -51,6 +51,7 @@ ls -l /etc/redis >> $PS_LOG/enketo-install
 #cp ~/enketo-express/config/default-config.json ~/enketo-express/config/config.json
 #configurar enketo
 cp $SCRIPTS/config.json ~/enketo-express/config/config.json
+cp $SCRIPTS/LDDI_COLOR-01.png ~/enketo-express/public/images/logo.png
 
 echo 'Configurando enketo-express'
 sudo -u $DEF_USER grunt
