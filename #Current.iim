@@ -1,0 +1,32 @@
+﻿VERSION BUILD=9030808 RECORDER=FX
+TAB T=1
+'URL GOTO=https://www.conacyt.gob.mx/index.php/el-conacyt/servicios-en-linea
+'TAG POS=1 TYPE=A ATTR=TXT:Acceso<SP>al<SP>Sistema
+'TAB T=2
+TAG POS=1 TYPE=BUTTON ATTR=TXT:Continuar
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:solicitudCuentaUsuarioForm ATTR=ID:curp CONTENT=hh
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:solicitudCuentaUsuarioForm ATTR=ID:solicitudCorreoUsuario CONTENT=gg
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:solicitudCuentaUsuarioForm ATTR=ID:usuarioConfirmacion CONTENT=hj
+TAG POS=1 TYPE=A ATTR=TXT:Cancelar
+TAG POS=1 TYPE=BUTTON ATTR=TXT:Continuar
+SET !DATASOURCE silv.csv
+'SET !DATASOURCE_DELIMITER ;
+SET !LOOP 2
+SET !DATASOURCE_LINE {{!LOOP}}
+'URL GOTO=https://miic.conacyt.mx/generador-view-angular/index.html?application=REGISTRO#/seleccionaTipoCuenta
+'TAG POS=1 TYPE=BUTTON ATTR=TXT:Continuar
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:solicitudCuentaUsuarioForm ATTR=ID:curp CONTENT={{!COL1}}
+TAG POS=2 TYPE=DIV ATTR=TXT:Correo<SP>electrónico*:<SP>Este<SP>campo<SP>es<SP>obligatori*
+'The precent (%) symbol is used to select the stateid by VALUE as defined in the website select statement and not by its index.
+'TAG POS=1 TYPE=SELECT FORM=ID:demo ATTR=NAME:state CONTENT=$*{{!COL6}}*
+'
+'The string ($) symbol is used to select the country by TEXT, not by its index.
+'Index would be the position of an entry in the combo box list, e. g. 161 for United States
+'TAG POS=1 TYPE=SELECT FORM=ID:demo ATTR=NAME:country CONTENT=$*{{!COL7}}*
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:solicitudCuentaUsuarioForm ATTR=ID:solicitudCorreoUsuario CONTENT={{!COL2}}
+SET !DATASOURCE silv2.csv
+SET !LOOP 2
+SET !DATASOURCE_LINE {{!LOOP}}
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:solicitudCuentaUsuarioForm ATTR=ID:usuarioConfirmacion CONTENT={{!COL1}}
+'TAG POS=1 TYPE=DIV ATTR=TXT:Por<SP>favor<SP>verifica<SP>la<SP>casilla.<SP>Validación*:*
+'TAG POS=1 TYPE=A ATTR=TXT:Cancelar

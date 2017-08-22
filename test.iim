@@ -1,0 +1,28 @@
+﻿VERSION BUILD=9030808 RECORDER=FX
+TAB T=1
+SET !DATASOURCE silv.csv
+SET !LOOP 2
+SET !DATASOURCE_LINE {{!LOOP}}
+URL GOTO=https://miic.conacyt.mx/generador-view-angular/index.html?application=REGISTRO#/seleccionaTipoCuenta
+TAG POS=1 TYPE=BUTTON ATTR=TXT:Continuar
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:solicitudCuentaUsuarioForm ATTR=ID:curp CONTENT={{!COL1}}
+TAG POS=2 TYPE=DIV ATTR=TXT:Correo<SP>electrónico*:<SP>Este<SP>campo<SP>es<SP>obligatori*
+'The precent (%) symbol is used to select the stateid by VALUE as defined in the website select statement and not by its index.
+'TAG POS=1 TYPE=SELECT FORM=ID:demo ATTR=NAME:state CONTENT=$*{{!COL6}}*
+'
+'The string ($) symbol is used to select the country by TEXT, not by its index.
+'Index would be the position of an entry in the combo box list, e. g. 161 for United States
+'TAG POS=1 TYPE=SELECT FORM=ID:demo ATTR=NAME:country CONTENT=$*{{!COL7}}*
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:solicitudCuentaUsuarioForm ATTR=ID:solicitudCorreoUsuario CONTENT={{!COL2}}
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:solicitudCuentaUsuarioForm ATTR=ID:usuarioConfirmacion CONTENT={{!COL3}}
+TAG POS=1 TYPE=DIV ATTR=TXT:Por<SP>favor<SP>verifica<SP>la<SP>casilla.<SP>Validación*:*
+
+'We manually changed the TAG command from using the postion of a value (e. g. "2") 
+'to using its real name, e. g. "Pizza"
+'TAG POS=1 TYPE=SELECT FORM=ID:demo ATTR=ID:food CONTENT=%Pizza
+'TAG POS=1 TYPE=SELECT FORM=ID:demo ATTR=ID:food CONTENT=3
+'TAG POS=1 TYPE=SELECT FORM=ID:demo ATTR=ID:drink CONTENT=%Coke
+'TAG POS=1 TYPE=INPUT:RADIO FORM=ID:demo ATTR=ID:medium&&VALUE:medium CONTENT=YES
+'If you want to select more than one, use a colon (:)
+'TAG POS=1 TYPE=SELECT FORM=ID:demo ATTR=ID:dessert CONTENT=%"ice cream":%"Apple Pie"
+'TAG POS=1 TYPE=INPUT:RADIO FORM=ID:demo ATTR=NAME:Customer CONTENT=YES
