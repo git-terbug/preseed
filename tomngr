@@ -26,4 +26,4 @@ fi
 	<user username="'"$AG_TUSER"'" password="'"$AG_PASS"'" roles="admin-gui"/>' /etc/tomcat8/tomcat-users.xml && \
 echo "Se han agregado los usuarios $MG_TUSER y $AG_TUSER a /etc/tomcat8/tomcat-users.xml" || \
 echo 'ha ocurrido un error') > $PS_LOG/tomngr-conf 
-exit
+exit 0
