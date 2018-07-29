@@ -12,8 +12,8 @@ apt-get update
 apt-get upgrade -y
 
 #detener apache2 primero
-#(systemctl disable apache2 && systemctl stop apache2 && \
-#echo 'Se ha detenido el servidor Apache' || echo 'No se ha podido detener Apache') > $PS_LOG/enketo-install
+(systemctl disable apache2 && systemctl stop apache2 && \
+echo 'Se ha detenido el servidor Apache' || echo 'No se ha podido detener Apache') >> $PS_LOG/enketo-install
 
 apt-get install -y git nginx-extras htop build-essential redis-server checkinstall python | tee -a $PS_LOG/enketo-install
 
