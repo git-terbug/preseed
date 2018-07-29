@@ -29,8 +29,8 @@ sh $SCRIPTS/ngx $NEW_CONF $OLD_CONF
 #(nginx -t && nginx -s reload && \
 #echo 'nueva configuración exitosa' || echo 'error al configurar nginx') >> $PS_LOG/enketo-install
 
-#configurando tomcat
 
+#configurando tomcat
 #if [ $SSL -eq '0' ]; then
 if [ -z $SSL ]; then
 echo "$(tput bold)Configurando tomcat$(tput sgr0)"

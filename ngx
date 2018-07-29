@@ -2,7 +2,7 @@
 #
 #configurar proxy
 
-#SCRIPTS=~/scripts
+SCRIPTS=~/scripts
 
 NEW_CONF=$1
 OLD_CONF=$2
@@ -17,14 +17,18 @@ if [ -z $NEW_CONF ]; then
 #rm /etc/nginx/sites-enabled/default && \
 #ln -s /etc/nginx/sites-available/tomcat-proxy.conf /etc/nginx/sites-enabled/tomcat-proxy.conf 
 
-cp $SCRIPTS/$NEW_CONF /etc/nginx/sites-available && \
+#Si no existe NEW_CONF en /etc/nginx/sites-available
+if [ ! -e /etc/nginx/sites-available/$NEW_CONF ]; then
+cp $SCRIPTS/$NEW_CONF /etc/nginx/sites-available
+fi
+
 rm /etc/nginx/sites-enabled/$OLD_CONF && \
 ln -s /etc/nginx/sites-available/$NEW_CONF /etc/nginx/sites-enabled
 
 (nginx -t && nginx -s reload && \
 echo "$NEW_CONF : configuración exitosa" || echo "error al configurar $NEW_CONF") >> $PS_LOG/proxy-install
 fi
-exit
+exit 0
 
 
 
