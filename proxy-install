@@ -60,7 +60,7 @@ echo 'SSL: Se ha actualizado server.xml' || \
 echo 'SSL: Ha ocurrido un error') >> $PS_LOG/proxy-install 
 fi
 (systemctl restart tomcat8 && echo 'reinicio exitoso Tomcat' || echo 'falló el reinicio Tomcat') >> $PS_LOG/proxy-install
-exit
+exit 0
 
 
 
