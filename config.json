@@ -3,7 +3,7 @@
     "port": "8025",
     "offline enabled": true,
     "linked form and data server": {
-        "name": "Kobo",
+        "name": "LEED",
         "server url": "",
         "api key": "enketorules",
         "legacy formhub": false,
@@ -58,7 +58,7 @@
         }
     },
     "logo": {
-        "source": "/images/logo.png",
+        "source": "public/images/logo.png",
         "href": ""
     },
     "disable save as draft": false,
