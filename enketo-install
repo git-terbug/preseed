@@ -65,7 +65,7 @@ sudo -u $DEF_USER pm2 save
 echo 'Se ha configurado el servicio' || echo 'Error al configurar el servicio') >> $PS_LOG/enketo-install
 
 #copiar logo
-#cp $SCRIPTS/LDDI_COLOR-01.png $HOME/enketo-express/public/images/logo.png
+#cp $SCRIPTS/COLOR-01.png $HOME/enketo-express/public/images/logo.png
 
 #crear webserver conf
 #cat /etc/nginx/sites-available/enketo
