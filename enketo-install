@@ -4,7 +4,7 @@
 
 #export DEF_USER=test
 #SCRIPTS=~/scripts
-echo "$(tput bold)Instalando Enketo$(tput sgr0)"
+echo "$(tput bold)Instalando Enketo$(tput sgr0)" | tee $PS_LOG/enketo-install
 
 #sudo apt-get install -y software-properties-common dirmngr 
 #sudo add-apt-repository -y ppa:chris-lea/redis-server
@@ -18,7 +18,7 @@ apt-get upgrade -y
 apt-get install -y git nginx-extras htop build-essential redis-server checkinstall python | tee -a $PS_LOG/enketo-install
 
 curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
-echo 'Instalando node.js'
+echo 'Instalando node.js' | tee -a $PS_LOG/enketo-install
 apt-get install -y nodejs
 #grunt-jsbeautifier grunt-concurrent grunt-contrib-jshint grunt-contrib-watch grunt-karma grunt-mocha-test grunt-nodemon
 npm install -g grunt-cli pm2 | tee -a $PS_LOG/enketo-install
@@ -28,7 +28,7 @@ dpkg-reconfigure -plow -f noninteractive unattended-upgrades
 echo	unattended-upgrades	unattended-upgrades/origins_pattern	string	"origin=Debian,codename=${distro_codename},label=Debian-Security" | debconf-set-selections
 echo	unattended-upgrades	unattended-upgrades/enable_auto_updates	boolean	true | debconf-set-selections
 
-echo 'Instalando enketo-express'
+echo 'Instalando enketo-express' | tee -a $PS_LOG/enketo-install
 cd ~
 sudo -u $DEF_USER git clone https://github.com/enketo/enketo-express.git
 cd enketo-express
@@ -36,7 +36,7 @@ sudo -u $DEF_USER npm install --production
 
 systemctl stop redis
 
-echo 'Instalando Redis'
+echo 'Instalando Redis' | tee -a $PS_LOG/enketo-install
 mv /etc/redis/redis.conf /etc/redis/redis-origin.conf
 cp ~/enketo-express/setup/redis/conf/redis-enketo-main.conf /etc/redis/
 cp ~/enketo-express/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
@@ -52,7 +52,7 @@ ls -l /etc/redis >> $PS_LOG/enketo-install
 #configurar enketo
 cp $SCRIPTS/config.json ~/enketo-express/config/config.json
 
-echo 'Configurando enketo-express'
+echo 'Configurando enketo-express' | tee -a $PS_LOG/enketo-install
 sudo -u $DEF_USER grunt
 
 #npm start
@@ -98,4 +98,3 @@ service fail2ban restart
 #configurar api aggregate
 #url = http://ejemplo.com:8080/api/v1/
 #c/ proxy: http://ejemplo.com/enketo/api/v1
-
