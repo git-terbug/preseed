@@ -53,7 +53,7 @@ mv $TOMCAT_APPS/ROOT ~/ROOT.old
 #copiar geoportal reempacado
 #cp $SCRIPTS/geoportal.war $GEO
 cp $SCRIPTS/geoportal.xml /etc/tomcat8/Catalina/localhost/ROOT.xml
-#chown root:tomcat8 /etc/tomcat8/Catalina/localhost/ROOT.xml
+chown root:tomcat8 /etc/tomcat8/Catalina/localhost/ROOT.xml
 sudo chmod +wx /etc/tomcat8/Catalina/localhost/ROOT.xml
 ls -l /etc/tomcat8/Catalina/localhost >> $PS_LOG/geo-install 
 ####
