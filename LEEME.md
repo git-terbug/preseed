@@ -1,28 +1,6 @@
 # scripts
 TO DO: Revisar valores
 
-# preseed.cfg
-7: d-i netcfg/get_hostname string debian
-
-28 - 38:
-#d-i passwd/root-password password admin
-
-#d-i passwd/root-password-again password admin
-
-#d-i passwd/root-password-crypted password [crypt(3) hash]
-
-d-i passwd/user-fullname string test
-
-d-i passwd/username string test
-
-d-i passwd/user-password password admin
-
-d-i passwd/user-password-again password admin
-
-#d-i passwd/user-password-crypted password [crypt(3) hash]
-
-194: && wget http://192.168.56.101/preseed/rc.local -P /target/etc \
-
 # rc.local
 15: export DEF_USER=test
 
@@ -62,15 +40,19 @@ echo "phpmyadmin phpmyadmin/app-password-confirm password qwerty" | debconf-set-
 
 # config.json
 
-# enketo
-
 # geoportal-install
 
 7: echo "geoportal:password" | sudo chpasswd
 
 # gpt.xml
-
+53
 538: <account username="gptuser" password="gptuser" encrypted="false"/>
 
 # geoportal.xml
            
+# proxy-install
+53
+
+# setenv.sh
+
+# ssl-setup
