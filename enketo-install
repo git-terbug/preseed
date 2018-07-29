@@ -12,12 +12,12 @@ apt-get update
 apt-get upgrade -y
 
 #detener apache2 primero
-(systemctl disable apache2 && systemctl stop apache2 && \
-echo 'Se ha detenido el servidor Apache' || echo 'No se ha podido detener Apache') > $PS_LOG/enketo-install
+#(systemctl disable apache2 && systemctl stop apache2 && \
+#echo 'Se ha detenido el servidor Apache' || echo 'No se ha podido detener Apache') > $PS_LOG/enketo-install
 
 apt-get install -y git nginx-extras htop build-essential redis-server checkinstall python | tee -a $PS_LOG/enketo-install
 
-curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
+curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 echo 'Instalando node.js'
 apt-get install -y nodejs
 #grunt-jsbeautifier grunt-concurrent grunt-contrib-jshint grunt-contrib-watch grunt-karma grunt-mocha-test grunt-nodemon
@@ -63,6 +63,9 @@ sudo -u $DEF_USER pm2 save
 #-u test/enketo
 (pm2 startup -u $DEF_USER --hp ~ && \
 echo 'Se ha configurado el servicio' || echo 'Error al configurar el servicio') >> $PS_LOG/enketo-install
+
+#copiar logo
+#cp $SCRIPTS/LDDI_COLOR-01.png $HOME/enketo-express/public/images/logo.png
 
 #crear webserver conf
 #cat /etc/nginx/sites-available/enketo
