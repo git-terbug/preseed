@@ -4,12 +4,13 @@
 
 #export DEF_USER=test
 #SCRIPTS=~/scripts
-echo "$(tput bold)Instalando Enketo$(tput sgr0)"
+echo "$(tput bold)Instalando requisitos$(tput sgr0)"
 
 #sudo apt-get install -y software-properties-common dirmngr 
 #sudo add-apt-repository -y ppa:chris-lea/redis-server
 apt-get update
 apt-get upgrade -y
+apt-get autoremove -y
 
 #detener apache2 primero
 (systemctl disable apache2 && systemctl stop apache2 && \
@@ -17,7 +18,7 @@ echo 'Se ha detenido el servidor Apache' || echo 'No se ha podido detener Apache
 
 apt-get install -y git nginx-extras htop build-essential redis-server checkinstall python | tee -a $PS_LOG/enketo-install
 
-curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
+curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 echo 'Instalando node.js'
 apt-get install -y nodejs
 #grunt-jsbeautifier grunt-concurrent grunt-contrib-jshint grunt-contrib-watch grunt-karma grunt-mocha-test grunt-nodemon
@@ -35,16 +36,19 @@ cd enketo-express
 sudo -u $DEF_USER npm install --production
 
 systemctl stop redis
+systemctl disable redis && systemctl daemon-reload
 
 echo 'Instalando Redis'
 mv /etc/redis/redis.conf /etc/redis/redis-origin.conf
 cp ~/enketo-express/setup/redis/conf/redis-enketo-main.conf /etc/redis/
 cp ~/enketo-express/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
-cp ~/enketo-express/setup/redis/systemd/system/* /etc/systemd/system/
+#cp ~/enketo-express/setup/redis/systemd/system/* /etc/systemd/system/
 
-systemctl disable redis && systemctl daemon-reload
-systemctl start redis@redis-enketo-main && systemctl enable redis@redis-enketo-main
-systemctl start redis@redis-enketo-cache && systemctl enable redis@redis-enketo-cache
+systemctl enable redis-server@enketo-main.service 
+systemctl enable redis-server@enketo-cache.service
+systemctl start redis-server@enketo-main.service
+systemctl start redis-server@enketo-cache.service
+
 echo 'Redis configurado' >> $PS_LOG/enketo-install
 ls -l /etc/redis >> $PS_LOG/enketo-install
 
@@ -54,7 +58,8 @@ cp $SCRIPTS/config.json ~/enketo-express/config/config.json
 cp $SCRIPTS/LDDI_COLOR-01.png ~/enketo-express/public/images/logo.png
 
 echo 'Configurando enketo-express'
-sudo -u $DEF_USER grunt
+sudo -u $DEF_USER npm install --production
+#sudo -u $DEF_USER grunt
 
 #npm start
 
@@ -63,6 +68,7 @@ sudo -u $DEF_USER pm2 start app.js -n enketo
 sudo -u $DEF_USER pm2 save
 #-u test/enketo
 (pm2 startup -u $DEF_USER --hp ~ && \
+#(pm2 startup systemd -u $DEF_USER && \
 echo 'Se ha configurado el servicio' || echo 'Error al configurar el servicio') >> $PS_LOG/enketo-install
 
 #crear webserver conf
@@ -70,7 +76,7 @@ echo 'Se ha configurado el servicio' || echo 'Error al configurar el servicio') 
 #cp ~/scripts/enketo /etc/nginx/sites-available/enketo
 #proxy completo
 #cp ~/scripts/tomcat-proxy.conf /etc/nginx/sites-available/tomcat-proxy.conf
-#activar
+#activar 
 #rm /etc/nginx/sites-enabled/default
 #ln -s /etc/nginx/sites-available/enketo /etc/nginx/sites-enabled/enketo 
 #ln -s /etc/nginx/sites-available/tomcat-proxy.conf /etc/nginx/sites-enabled/tomcat-proxy.conf
